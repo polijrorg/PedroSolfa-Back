@@ -11,10 +11,15 @@ import IUsersRepository from '../repositories/IUsersRepository';
 
 interface IRequest {
   name: string;
+  nickname: string;
   email: string;
   cpf: string;
+  profession: string;
+  specialization: string;
   phone: string;
   password: string;
+  city: string;
+  state: string;
 }
 
 @injectable()
@@ -31,7 +36,7 @@ export default class CreateUserService {
   ) { }
 
   public async execute({
-    cpf, email, name, password, phone,
+    name, nickname, email, cpf, profession, specialization, phone, password, city, state,
   }: IRequest): Promise<Users> {
     const userAlreadyExists = await this.usersRepository.findByEmailPhoneOrCpf(email, phone, cpf);
 
@@ -41,10 +46,15 @@ export default class CreateUserService {
 
     const user = this.usersRepository.create({
       name,
+      nickname,
       email: email.toLowerCase(),
       cpf,
-      password: hashedPassword,
+      profession,
+      specialization,
       phone,
+      password: hashedPassword,
+      city,
+      state,
     });
 
     const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');
