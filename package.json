@@ -8,7 +8,8 @@
   "scripts": {
     "lint": "eslint src --ext ts,tsx",
     "dev:server": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules src/shared/infra/http/server.ts",
-    "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files"
+    "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
+    "docs": "npx insomnia-documenter --output docs"
   },
   "prisma": {
     "schema": "src/shared/infra/prisma/schema.prisma"
@@ -44,6 +45,7 @@
     "aws-sdk": "^2.846.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "debug": "^4.3.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
