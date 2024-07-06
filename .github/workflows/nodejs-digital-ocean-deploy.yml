@@ -37,7 +37,7 @@ jobs:
         run: yarn build
 
       - name: Copy dist to Digital Ocean
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@v0.1.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -47,7 +47,7 @@ jobs:
           target: "~/PedroSolfa-Back"
 
       - name: Run production scripts on Digital Ocean
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
