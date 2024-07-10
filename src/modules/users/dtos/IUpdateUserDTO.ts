@@ -2,7 +2,6 @@ interface IUpdateUserDTO {
     name: string;
     nickname: string;
     email: string;
-    cpf: string;
     profession: string;
     specialization: string;
     phone: string;

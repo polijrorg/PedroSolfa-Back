@@ -12,7 +12,6 @@ interface IRequest {
     name: string;
     nickname: string;
     email: string;
-    cpf: string;
     profession: string;
     specialization: string;
     phone: string;
@@ -32,7 +31,7 @@ export default class UpdateUserService {
   ) { }
 
 public async execute({
-  id, name, nickname, email, cpf, profession, specialization, phone, password, city, state,
+  id, name, nickname, email, profession, specialization, phone, password, city, state,
 }: IRequest): Promise<Users> {
     const userAlreadyExists = await this.usersRepository.findById(id);
 
@@ -46,7 +45,6 @@ public async execute({
       name,
       nickname,
       email: email.toLowerCase(),
-      cpf,
       profession,
       specialization,
       phone,
