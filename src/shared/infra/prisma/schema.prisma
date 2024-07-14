@@ -8,18 +8,47 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Groups {
+  id            String   @id @default(uuid())
+  users         Users[]  @relation("GroupUsers")
+  adms          Users[]  @relation("GroupAdmins")
+  invited_users Users[]  @relation("InvitedUsers")
+  super_adm_id  String
+  super_adm     Users    @relation("SuperAdm", fields: [super_adm_id], references: [id])
+  name          String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+}
+
+model Plans {
+  id         String   @id @default(uuid())
+  users      Users[]
+  name       String
+  price      Float
+  max_users  Int
+  max_groups Int
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
 model Users {
   id             String   @id @default(uuid())
-  name           String   @unique
+  name           String
   nickname       String
-  email          String
-  cpf            String
+  email          String   @unique
+  cpf            String   @unique
   profession     String
   specialization String
-  phone          String
+  phone          String   @unique
   password       String
   city           String
   state          String
   created_at     DateTime @default(now())
   updated_at     DateTime @default(now())
+  user_groups    Groups[] @relation("GroupUsers")
+  adm_groups     Groups[] @relation("GroupAdmins")
+  super_groups   Groups[] @relation("SuperAdm")
+  invited_groups Groups[] @relation("InvitedUsers")
+  plan_id        String?
+  plan           Plans?   @relation(fields: [plan_id], references: [id])
 }
