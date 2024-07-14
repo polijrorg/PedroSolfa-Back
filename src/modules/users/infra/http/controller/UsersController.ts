@@ -3,11 +3,11 @@ import { container } from 'tsyringe';
 
 import CreateUserService from '@modules/users/services/CreateUserService';
 import ReadAllUsersService from '@modules/users/services/ReadAllUsersService';
-import ReadUserByIdService from '../../../services/ReadUserByIdService';
+import ReadUserByIdService from '@modules/users/services/ReadUserByIdService';
 import DeleteUserService from '@modules/users/services/DeleteUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 
-export default class UserController {
+export default class UsersController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
       name,

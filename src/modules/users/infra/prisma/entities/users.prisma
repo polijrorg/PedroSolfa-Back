@@ -1,12 +1,12 @@
 model Users {
   id              String   @id @default(uuid())
-  name            String   @unique
+  name            String   
   nickname        String   
-  email           String
-  cpf             String
+  email           String   @unique
+  cpf             String   @unique
   profession      String
   specialization  String
-  phone           String
+  phone           String   @unique
   password        String
   city            String
   state           String

@@ -4,7 +4,6 @@ import { Users } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
-import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 interface IRequest {
