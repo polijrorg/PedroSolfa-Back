@@ -1,0 +1,228 @@
+import prisma from '@shared/infra/prisma/client';
+import { Prisma, Groups, InvitedEmails } from '@prisma/client';
+
+import IInvitesRepository from '@modules/invites/repositories/IInvitesRepository';
+import ICreateInviteDTO from '@modules/invites/dtos/ICreateInviteDTO';
+
+export default class InvitesRepository implements IInvitesRepository {
+  async findByEmail(group_id: string, email: string): Promise<Groups | null> {
+    return await prisma.groups.findUnique({
+      where: {
+        id: group_id,
+        OR: [
+          {
+            invited_users: {
+              some: { email },
+            },
+          },
+          {
+            invited_emails: {
+              some: { email },
+            },
+          },
+        ],
+      },
+    });
+  }
+
+  async findGroupById(group_id: string): Promise<Groups | null> {
+    return await prisma.groups.findUnique({
+      where: {
+        id: group_id,
+      },
+      include: {
+        invited_users: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+        invited_emails: {
+          select: {
+            email: true,
+          }
+        },
+      },
+    });
+  }
+
+  async create(data: ICreateInviteDTO): Promise<Groups> {
+    const user = await prisma.users.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
+
+    let updatedGroup: Groups;
+
+    if(user){
+      updatedGroup = await prisma.groups.update({
+        where: {
+          id: data.group_id,
+        },
+        data: {
+          invited_users: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+        include: {
+          invited_users: {
+            select: {
+              email: true,
+              name: true,
+            }
+          },
+        },
+      });  
+    }else{
+      const invite = await prisma.invitedEmails.create({ data });
+      updatedGroup = await prisma.groups.update({
+        where: {
+          id: data.group_id,
+        },
+        data: {
+          invited_emails: {
+            connect: {
+              id: invite.id,
+            },
+          },
+        },
+        include: {
+          invited_emails: {
+            select: {
+              email: true,
+            }
+          },
+        },
+      }); 
+    }
+    
+    return updatedGroup;
+  }
+
+  async findAll(): Promise<Groups[]> {
+    return await prisma.groups.findMany({
+      include: {
+        invited_users: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+        invited_emails: {
+          select: {
+            email: true,
+          }
+        },
+      },
+    });
+  }
+
+  async delete(group_id: string, email: string): Promise<Groups> {
+    const user = await prisma.users.findUnique({
+      where: {
+        email: email,
+      },
+      
+    });
+
+    let updatedGroup: Groups;
+
+    if(user){
+      updatedGroup = await prisma.groups.update({
+        where: {
+          id: group_id,
+        },
+        data: {
+          invited_users: {
+            disconnect: {
+              id: user.id,
+            },
+          },
+        },
+        include: {
+          invited_users: {
+            select: {
+              email: true,
+              name: true,
+            }
+          },
+        },
+      });
+    }else{
+      const invite = await prisma.invitedEmails.findFirst({ where: { email } });
+      updatedGroup = await prisma.groups.update({
+        where: {
+          id: group_id,
+        },
+        data: {
+          invited_emails: {
+            delete: {
+              id: invite?.id,
+            },
+          },
+        },
+        include: {
+          invited_emails: {
+            select: {
+              email: true,
+            }
+          },
+        },
+      });
+    }
+
+    return updatedGroup;
+  }
+
+  async updateInvites(email: string): Promise<Groups[]> {
+    const user = await prisma.users.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    const invites = await prisma.invitedEmails.findMany({
+      where: {
+        email: email,
+      },
+    });
+
+    const groups = await Promise.all(invites.map(async (invite) => {
+      return await prisma.groups.update({
+        where: {
+          id: invite.group_id,
+        },
+        data: {
+          invited_emails: {
+            delete: {
+              id: invite.id,
+            },
+          },
+          invited_users: {
+            connect: {
+              id: user?.id,
+            },
+          },
+        },
+        include: {
+          invited_users: {
+            select: {
+              email: true,
+              name: true,
+            }
+          },
+          invited_emails: {
+            select: {
+              email: true,
+            }
+          },
+        },
+      });
+    }));
+
+    return groups;
+  }
+}
