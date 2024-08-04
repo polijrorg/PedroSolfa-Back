@@ -8,6 +8,7 @@ interface IInvitesRepository {
   create(data: ICreateInviteDTO): Promise<Groups>;
   findAll(): Promise<Groups[]>;
   delete(group_id: string, email: string): Promise<Groups>;
+  updateInvites(email: string): Promise<Groups[]>;
 }
 
 export default IInvitesRepository;

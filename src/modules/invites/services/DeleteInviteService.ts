@@ -28,11 +28,7 @@ export default class DeleteInviteService {
     const groupExists = await this.groupsRepository.findById(group_id);
     if (!groupExists) throw new AppError('Group with this id does not exist');
 
-    const userExists = await this.usersRepository.findByEmailWithRelations(email);
-    if (!userExists) throw new AppError('User with this email does not exist');
-
     const inviteAlreadyExists = await this.invitesRepository.findByEmail(group_id, email);
-
     if (!inviteAlreadyExists) throw new AppError('This invite does not exist');
 
     const deletedInvite = this.invitesRepository.delete(group_id, email);

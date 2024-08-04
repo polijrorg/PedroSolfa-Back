@@ -30,9 +30,6 @@ export default class CreateInviteService {
     const groupExists = await this.groupsRepository.findById(group_id);
     if (!groupExists) throw new AppError('Group with this id does not exist');
 
-    const userExists = await this.usersRepository.findByEmailWithRelations(email);
-    if (!userExists) throw new AppError('User with this email does not exist');
-
     const inviteAlreadyExists = await this.invitesRepository.findByEmail(group_id, email);
     if (inviteAlreadyExists) throw new AppError('An invite was already sent to this email');
 

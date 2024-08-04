@@ -8,6 +8,7 @@ import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
+import IInvitesRepository from '@modules/invites/repositories/IInvitesRepository';
 
 interface IRequest {
   name: string;
@@ -28,6 +29,9 @@ export default class CreateUserService {
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
 
+    @inject('InvitesRepository')
+    private invitesRepository: IInvitesRepository,
+
     @inject('HashProvider')
     private hashProvider: IHashProvider,
 
@@ -44,7 +48,7 @@ export default class CreateUserService {
 
     const hashedPassword = await this.hashProvider.generateHash(password);
 
-    const user = this.usersRepository.create({
+    const user = await this.usersRepository.create({
       name,
       nickname,
       email: email.toLowerCase(),
@@ -56,6 +60,8 @@ export default class CreateUserService {
       city,
       state,
     });
+
+    await this.invitesRepository.updateInvites(email);
 
     const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');
 

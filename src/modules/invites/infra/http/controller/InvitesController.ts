@@ -35,7 +35,8 @@ export default class InvitesController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    const { group_id, email } = req.params;
+    const { group_id } = req.params;
+    const { email } = req.body;
 
     const deleteUser = container.resolve(DeleteInviteService);
 
