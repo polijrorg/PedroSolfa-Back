@@ -10,30 +10,17 @@ generator client {
 
 model Groups {
   id             String          @id @default(uuid())
+  subscription   Subscriptions?
+  super_adm_id   String
+  super_adm      Users           @relation("SuperAdm", fields: [super_adm_id], references: [id])
   users          Users[]         @relation("GroupUsers")
   adms           Users[]         @relation("GroupAdmins")
   invited_users  Users[]         @relation("InvitedUsers")
   invited_adms   Users[]         @relation("InvitedAdms")
   invited_emails InvitedEmails[] @relation("GroupInvitedEmails")
-  super_adm_id   String
-  //plan_id String
-  //plan Plans @relation(fields:[plan_id],references:[id])
-  super_adm      Users           @relation("SuperAdm", fields: [super_adm_id], references: [id])
   name           String
   created_at     DateTime        @default(now())
   updated_at     DateTime        @default(now())
-}
-
-model Plans {
-  id         String   @id @default(uuid())
-  users      Users[]
-  //groups Groups[]
-  name       String
-  price      Float
-  max_users  Int
-  max_groups Int
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
 }
 
 model InvitedEmails {
@@ -44,23 +31,45 @@ model InvitedEmails {
 }
 
 model Users {
-  id             String   @id @default(uuid())
+  id             String          @id @default(uuid())
   name           String
   nickname       String
-  email          String   @unique
-  cpf            String   @unique
+  email          String          @unique
+  cpf            String          @unique
   profession     String
   specialization String
-  phone          String   @unique
+  phone          String          @unique
   password       String
   city           String
   state          String
-  created_at     DateTime @default(now())
-  updated_at     DateTime @default(now())
-  user_groups    Groups[] @relation("GroupUsers")
-  adm_groups     Groups[] @relation("GroupAdmins")
-  super_groups   Groups[] @relation("SuperAdm")
-  invited_groups Groups[] @relation("InvitedUsers")
-  invited_adms   Groups[] @relation("InvitedAdms")
-  plans          Plans[]
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @default(now())
+  subscriptions  Subscriptions[]
+  super_groups   Groups[]        @relation("SuperAdm")
+  user_groups    Groups[]        @relation("GroupUsers")
+  adm_groups     Groups[]        @relation("GroupAdmins")
+  invited_groups Groups[]        @relation("InvitedUsers")
+  invited_adms   Groups[]        @relation("InvitedAdms")
+}
+
+model Plans {
+  id            String          @id @default(uuid())
+  name          String
+  price         Float
+  max_users     Int
+  subscriptions Subscriptions[]
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @default(now())
+}
+
+model Subscriptions {
+  id         String   @id @default(uuid())
+  plan_id    String
+  plan       Plans    @relation(fields: [plan_id], references: [id])
+  user_id    String
+  user       Users    @relation(fields: [user_id], references: [id])
+  group      Groups   @relation(fields: [group_id], references: [id])
+  group_id   String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 }

@@ -1,9 +1,0 @@
-model Plans {
-  id              String   @id @default(uuid())
-  name            String   
-  price           Float
-  max_users       Int
-  max_groups      Int
-  created_at      DateTime @default(now())
-  updated_at      DateTime @default(now())
-}
