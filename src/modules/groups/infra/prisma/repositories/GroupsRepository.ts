@@ -12,32 +12,167 @@ export default class GroupsRepository implements IGroupsRepository {
     this.ormRepository = prisma.groups;
   }
 
-  public async create(data: ICreateGroupDTO): Promise<Groups> {
-    const group = await this.ormRepository.create({ data });
-
-    return group;
+  public async create(data: ICreateGroupDTO & { include: { invited_users: { select: { email: true; name: true; }; }; }; }): Promise<Groups> {
+      const group = await this.ormRepository.create({ 
+          data,
+          include: {
+            invited_users: {
+              select: {
+                email: true,
+                name: true,
+              }
+            },
+            invited_emails: {
+              select: {
+                email: true,
+              }
+            },
+            users: {
+              select: {
+                email: true,
+                name: true,
+              }
+            },
+            adms: {
+              select: {
+                email: true,
+                name: true,
+              }
+            },
+          },
+      });
+  
+      return group;
   }
 
   public async findAll(): Promise<Groups[]> {
-    const groups = await this.ormRepository.findMany();
-
-    return groups;
-  }
+      const groups = await this.ormRepository.findMany({
+        include: {
+          invited_users: {
+            select: {
+              email: true,
+              name: true,
+            }
+          },
+          invited_emails: {
+            select: {
+              email: true,
+            }
+          },
+          users: {
+            select: {
+              email: true,
+              name: true,
+            }
+          },
+          adms: {
+            select: {
+              email: true,
+              name: true,
+            }
+          },
+        },
+      });
+  
+      return groups;
+    }
 
   public async findById(id: string): Promise<Groups | null> {
-    const group = await this.ormRepository.findFirst({ where: { id } });
+    const group = await this.ormRepository.findFirst({ 
+      where: { id },
+      include: {
+        invited_users: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+        invited_emails: {
+          select: {
+            email: true,
+          }
+        },
+        users: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+        adms: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+      },
+    });
 
     return group;
   }
 
   public async delete(id: string): Promise<Groups> {
-    const group = await this.ormRepository.delete({ where: { id } });
+    const group = await this.ormRepository.delete({ 
+      where: { id },
+      include: {
+        invited_users: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+        invited_emails: {
+          select: {
+            email: true,
+          }
+        },
+        users: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+        adms: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+      },
+    });
 
     return group;
   }
 
   public async update(id: string, data: IUpdateGroupDTO): Promise<Groups> {
-    const group = await this.ormRepository.update({ where: { id }, data });
+    const group = await this.ormRepository.update({ 
+      where: { id }, 
+      data,
+      include: {
+        invited_users: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+        invited_emails: {
+          select: {
+            email: true,
+          }
+        },
+        users: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+        adms: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+      },
+    });
 
     return group;
   }
