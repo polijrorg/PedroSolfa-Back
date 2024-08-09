@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateInviteService from '@modules/invites/services/CreateInviteService';
 import ReadInvitesByGroupIdService from '@modules/invites/services/ReadInvitesByGroupIdService';
 import DeleteInviteService from '@modules/invites/services/DeleteInviteService';
+import AcceptInviteService from '@modules/invites/services/AcceptInviteService';
 
 export default class InvitesController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -46,5 +47,19 @@ export default class InvitesController {
     });
 
     return res.status(201).json(user);
+  }
+
+  public async accept(req: Request, res: Response): Promise<Response> {
+    const { user_id } = req.params;
+    const { group_id } = req.body;
+
+    const acceptInvite = container.resolve(AcceptInviteService);
+
+    const group = await acceptInvite.execute({
+      user_id,
+      group_id,
+    });
+
+    return res.status(201).json(group);
   }
 }

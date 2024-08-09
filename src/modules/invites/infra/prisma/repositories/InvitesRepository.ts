@@ -190,7 +190,7 @@ export default class InvitesRepository implements IInvitesRepository {
       },
     });
 
-    const groups = await Promise.all(invites.map(async (invite) => {
+    return await Promise.all(invites.map(async (invite) => {
       return await prisma.groups.update({
         where: {
           id: invite.group_id,
@@ -222,7 +222,40 @@ export default class InvitesRepository implements IInvitesRepository {
         },
       });
     }));
+  }
 
-    return groups;
+  async acceptInvite(group_id: string, user_id: string): Promise<Groups> {
+
+    return await prisma.groups.update({
+      where: {
+        id: group_id,
+      },
+      data: {
+        invited_users: {
+          disconnect: {
+            id: user_id,
+          },
+        },
+        users: {
+          connect: {
+            id: user_id,
+          },
+        },
+      },
+      include: {
+        invited_users: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+        users: {
+          select: {
+            email: true,
+            name: true,
+          }
+        },
+      },
+    });
   }
 }

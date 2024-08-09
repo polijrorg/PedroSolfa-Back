@@ -9,6 +9,7 @@ interface IInvitesRepository {
   findAll(): Promise<Groups[]>;
   delete(group_id: string, email: string): Promise<Groups>;
   updateInvites(email: string): Promise<Groups[]>;
+  acceptInvite(group_id: string, user_id: string): Promise<Groups>;
 }
 
 export default IInvitesRepository;
