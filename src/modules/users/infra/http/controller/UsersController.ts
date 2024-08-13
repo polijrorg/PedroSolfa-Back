@@ -44,17 +44,14 @@ export default class UsersController {
   }
 
   public async readAll(req: Request, res: Response): Promise<Response> {
-
     const readUsers = container.resolve(ReadAllUsersService);
 
     const users = await readUsers.execute();
-    
-    return res.status(201).json(users?.map(user => {
-      return {
-        ...user,
-        password: undefined,
-      };
-    }));
+
+    return res.status(201).json(users?.map((user) => ({
+      ...user,
+      password: undefined,
+    })));
   }
 
   public async readById(req: Request, res: Response): Promise<Response> {
@@ -66,7 +63,7 @@ export default class UsersController {
       id,
     });
 
-    if(user){
+    if (user) {
       user.password = '###';
     }
 

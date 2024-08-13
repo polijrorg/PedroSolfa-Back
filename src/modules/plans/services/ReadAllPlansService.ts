@@ -12,7 +12,6 @@ export default class ReadAllPlansService {
   ) { }
 
   public async execute(): Promise<Plans[] | null> {
-
     const plans = this.plansRepository.findAll();
 
     return plans;

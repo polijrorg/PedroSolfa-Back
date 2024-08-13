@@ -4,8 +4,8 @@ import { Groups } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
-import IInvitesRepository from '../repositories/IInvitesRepository';
 import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
+import IInvitesRepository from '../repositories/IInvitesRepository';
 
 interface IRequest {
   group_id: string;

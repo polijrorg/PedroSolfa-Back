@@ -24,19 +24,20 @@ export default class UpdatePlanService {
     private hashProvider: IHashProvider,
   ) { }
 
-public async execute({
-  id, name, price, max_users,
-}: IRequest): Promise<Plans> {
+  public async execute({
+    id, name, price, max_users,
+  }: IRequest): Promise<Plans> {
     const planAlreadyExists = await this.plansRepository.findById(id);
     if (!planAlreadyExists) throw new AppError('Plan with this id does not exist');
 
     const updatedPlan = this.plansRepository.update(
-    id,
-    {
-      name,
-      price,
-      max_users
-    });
+      id,
+      {
+        name,
+        price,
+        max_users,
+      },
+    );
 
     return updatedPlan;
   }

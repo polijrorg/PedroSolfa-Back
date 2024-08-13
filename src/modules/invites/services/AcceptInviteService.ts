@@ -4,9 +4,9 @@ import { Groups } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
-import IInvitesRepository from '../repositories/IInvitesRepository';
 import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IInvitesRepository from '../repositories/IInvitesRepository';
 
 interface IRequest {
   user_id: string;

@@ -20,35 +20,35 @@ export default class UsersRepository implements IUsersRepository {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         user_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         invited_adms: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         adm_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         super_groups: {
           select: {
             id: true,
             name: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
-  
+
     return user;
   }
 
@@ -61,203 +61,202 @@ export default class UsersRepository implements IUsersRepository {
   }
 
   public async create(data: ICreateUserDTO): Promise<Users> {
-    const user = await this.ormRepository.create({ 
+    const user = await this.ormRepository.create({
       data,
       include: {
         invited_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         user_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         invited_adms: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         adm_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         super_groups: {
           select: {
             id: true,
             name: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     return user;
   }
 
   public async findAll(): Promise<Users[]> {
-      const users = await this.ormRepository.findMany({
-        include: {
-          invited_groups: {
-            select: {
-              id: true,
-              name: true,
-            }
+    const users = await this.ormRepository.findMany({
+      include: {
+        invited_groups: {
+          select: {
+            id: true,
+            name: true,
           },
-          user_groups: {
-            select: {
-              id: true,
-              name: true,
-            }
+        },
+        user_groups: {
+          select: {
+            id: true,
+            name: true,
           },
-          invited_adms: {
-            select: {
-              id: true,
-              name: true,
-            }
+        },
+        invited_adms: {
+          select: {
+            id: true,
+            name: true,
           },
-          adm_groups: {
-            select: {
-              id: true,
-              name: true,
-            }
+        },
+        adm_groups: {
+          select: {
+            id: true,
+            name: true,
           },
-          super_groups: {
-            select: {
-              id: true,
-              name: true,
-            }
-          }
-        }
-      });
-  
-      return users;
+        },
+        super_groups: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return users;
   }
 
   public async findById(id: string): Promise<Users | null> {
-    const user = await this.ormRepository.findFirst({ 
+    const user = await this.ormRepository.findFirst({
       where: { id },
       include: {
         invited_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         user_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         invited_adms: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         adm_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         super_groups: {
           select: {
             id: true,
             name: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     return user;
   }
 
   public async delete(id: string): Promise<Users> {
-    const user = await this.ormRepository.delete({ 
+    const user = await this.ormRepository.delete({
       where: { id },
       include: {
         invited_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         user_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         invited_adms: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         adm_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         super_groups: {
           select: {
             id: true,
             name: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     return user;
   }
 
   public async update(id: string, data: IUpdateUserDTO): Promise<Users> {
-    const user = await this.ormRepository.update({ 
-      where: { id }, 
+    const user = await this.ormRepository.update({
+      where: { id },
       data,
       include: {
         invited_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         user_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         invited_adms: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         adm_groups: {
           select: {
             id: true,
             name: true,
-          }
+          },
         },
         super_groups: {
           select: {
             id: true,
             name: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     return user;
   }
-
 }

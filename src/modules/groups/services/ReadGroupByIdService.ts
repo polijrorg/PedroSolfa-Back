@@ -18,7 +18,6 @@ export default class ReadGroupByIdService {
   ) { }
 
   public async execute({ id }: IRequest): Promise<Groups | null> {
-
     const groupAlreadyExists = await this.groupsRepository.findById(id);
 
     if (!groupAlreadyExists) throw new AppError('Group with this id does not exist');

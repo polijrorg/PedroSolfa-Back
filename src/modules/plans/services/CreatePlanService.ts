@@ -18,7 +18,6 @@ export default class CreateUserService {
   public async execute({
     name, price, max_users,
   }: IRequest): Promise<Plans> {
-
     const plan = await this.plansRepository.create({
       name,
       price,

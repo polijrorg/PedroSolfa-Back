@@ -25,7 +25,6 @@ export default class GroupController {
   }
 
   public async readAll(req: Request, res: Response): Promise<Response> {
-
     const readGroups = container.resolve(ReadAllGroupsService);
 
     const groups = await readGroups.execute();

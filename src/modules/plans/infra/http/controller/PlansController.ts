@@ -27,7 +27,6 @@ export default class PlanController {
   }
 
   public async readAll(req: Request, res: Response): Promise<Response> {
-
     const readPlans = container.resolve(ReadAllPlansService);
 
     const plans = await readPlans.execute();

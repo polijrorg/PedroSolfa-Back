@@ -4,9 +4,9 @@ import { Groups } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
-import IInvitesRepository from '../repositories/IInvitesRepository';
 import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IInvitesRepository from '../repositories/IInvitesRepository';
 
 interface IRequest {
   group_id: string;
@@ -24,7 +24,7 @@ export default class DeleteInviteService {
     private usersRepository: IUsersRepository,
   ) { }
 
-  public async execute({ group_id, email, }: IRequest): Promise<Groups> {
+  public async execute({ group_id, email }: IRequest): Promise<Groups> {
     const groupExists = await this.groupsRepository.findById(group_id);
     if (!groupExists) throw new AppError('Group with this id does not exist');
 
