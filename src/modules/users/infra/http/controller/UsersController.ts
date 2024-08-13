@@ -37,9 +37,10 @@ export default class UsersController {
       state,
     });
 
-    user.password = '###';
-
-    return res.status(201).json(user);
+    return res.status(201).json({
+      ...user,
+      password: undefined,
+    });
   }
 
   public async readAll(req: Request, res: Response): Promise<Response> {
@@ -47,17 +48,17 @@ export default class UsersController {
     const readUsers = container.resolve(ReadAllUsersService);
 
     const users = await readUsers.execute();
-
-    if(users) {
-        users.forEach(user => {
-        user.password = '###';
-      });
-    }
-    return res.status(201).json(users);
+    
+    return res.status(201).json(users?.map(user => {
+      return {
+        ...user,
+        password: undefined,
+      };
+    }));
   }
 
   public async readById(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
+    const { id } = req.token;
 
     const readUser = container.resolve(ReadUserByIdService);
 
@@ -73,7 +74,7 @@ export default class UsersController {
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
+    const { id } = req.token;
 
     const {
       name,
@@ -102,13 +103,14 @@ export default class UsersController {
       state,
     });
 
-    user.password = '###';
-
-    return res.status(201).json(user);
+    return res.status(201).json({
+      ...user,
+      password: undefined,
+    });
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
+    const { id } = req.token;
 
     const deleteUser = container.resolve(DeleteUserService);
 
@@ -116,8 +118,9 @@ export default class UsersController {
       id,
     });
 
-    user.password = '###';
-
-    return res.status(201).json(user);
+    return res.status(201).json({
+      ...user,
+      password: undefined,
+    });
   }
 }
