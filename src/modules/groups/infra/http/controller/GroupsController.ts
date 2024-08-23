@@ -11,14 +11,19 @@ export default class GroupController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
       name,
-      super_adm_id,
+      description,
+      subscription_id,
     } = req.body;
+
+    const { id } = req.token;
 
     const createGroup = container.resolve(CreateGroupService);
 
     const group = await createGroup.execute({
       name,
-      super_adm_id,
+      subscription_id,
+      description,
+      super_adm_id: id,
     });
 
     return res.status(201).json(group);
@@ -49,6 +54,7 @@ export default class GroupController {
 
     const {
       name,
+      description,
     } = req.body;
 
     const updateGroup = container.resolve(UpdateGroupService);

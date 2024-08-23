@@ -255,4 +255,89 @@ export default class InvitesRepository implements IInvitesRepository {
       },
     });
   }
+
+  async isAlreadyUser(group_id: string, user_id: string): Promise<Groups | null> {
+    return await prisma.groups.findUnique({
+      where: {
+        id: group_id,
+        users: {
+          some: { id: user_id },
+        }, 
+      },
+    });
+  }
+
+  async isAlreadyAdm(group_id: string, id: string): Promise<Groups | null> {
+    return await prisma.groups.findUnique({
+      where: {
+        id: group_id,
+        adms: {
+          some: { id },
+        }, 
+      },
+    });
+  }
+
+  async turnIntoAdm(group_id: string, user_id: string): Promise<Groups> {
+    return await prisma.groups.update({
+      where: {
+        id: group_id,
+      },
+      data: {
+        users: {
+          disconnect: {
+            id: user_id,
+          },
+        },
+        adms: {
+          connect: {
+            id: user_id,
+          },
+        },
+      },
+      include: {
+        users: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+        adms: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+      },
+    });
+  }
+
+  async defaultAdm(group_id: string, user_id: string): Promise<Groups> {
+    return await prisma.groups.update({
+      where: {
+        id: group_id,
+      },
+      data: {
+        adms: {
+          connect: {
+            id: user_id,
+          },
+        },
+      },
+      include: {
+        users: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+        adms: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+      },
+    });
+  }
 }

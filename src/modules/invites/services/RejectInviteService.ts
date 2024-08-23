@@ -6,11 +6,11 @@ import AppError from '@shared/errors/AppError';
 
 import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
 import IInvitesRepository from '../repositories/IInvitesRepository';
+import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 
 interface IRequest {
-  id: string;
+  user_id: string;
   group_id: string;
-  email: string;
 }
 
 @injectable()
@@ -20,19 +20,22 @@ export default class DeleteInviteService {
     private invitesRepository: IInvitesRepository,
     @inject('GroupsRepository')
     private groupsRepository: IGroupsRepository,
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
   ) { }
 
-  public async execute({ id, group_id, email }: IRequest): Promise<Groups> {
+  public async execute({ user_id, group_id }: IRequest): Promise<Groups> {
+
+    const user = await this.usersRepository.findById(user_id);
+    if (!user) throw new AppError('User with this id does not exist');
+
     const groupExists = await this.groupsRepository.findById(group_id);
     if (!groupExists) throw new AppError('Group with this id does not exist');
 
-    const inviteAlreadyExists = await this.invitesRepository.findByEmail(group_id, email);
+    const inviteAlreadyExists = await this.invitesRepository.findByEmail(group_id, user.email);
     if (!inviteAlreadyExists) throw new AppError('This invite does not exist');
 
-    const isAlreadyAdm = await this.invitesRepository.isAlreadyAdm(group_id, id);
-    if (!isAlreadyAdm) throw new AppError('You are not an adm of this group');
-
-    const deletedInvite = this.invitesRepository.delete(group_id, email);
+    const deletedInvite = this.invitesRepository.delete(group_id, user.email);
 
     return deletedInvite;
   }

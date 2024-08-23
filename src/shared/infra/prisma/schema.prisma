@@ -19,6 +19,7 @@ model Groups {
   invited_adms   Users[]         @relation("InvitedAdms")
   invited_emails InvitedEmails[] @relation("GroupInvitedEmails")
   name           String
+  description    String
   created_at     DateTime        @default(now())
   updated_at     DateTime        @default(now())
 }
@@ -54,10 +55,10 @@ model Users {
 
 model Plans {
   id            String          @id @default(uuid())
+  subscriptions Subscriptions[]
   name          String
   price         Float
   max_users     Int
-  subscriptions Subscriptions[]
   created_at    DateTime        @default(now())
   updated_at    DateTime        @default(now())
 }
@@ -68,8 +69,8 @@ model Subscriptions {
   plan       Plans    @relation(fields: [plan_id], references: [id])
   user_id    String
   user       Users    @relation(fields: [user_id], references: [id])
-  group      Groups   @relation(fields: [group_id], references: [id])
-  group_id   String   @unique
+  group      Groups?  @relation(fields: [group_id], references: [id])
+  group_id   String?  @unique
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 }

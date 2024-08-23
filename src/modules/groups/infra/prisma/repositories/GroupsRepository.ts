@@ -14,7 +14,14 @@ export default class GroupsRepository implements IGroupsRepository {
 
   public async create(data: ICreateGroupDTO & { include: { invited_users: { select: { email: true; name: true; }; }; }; }): Promise<Groups> {
     const group = await this.ormRepository.create({
-      data,
+      data: {
+        name: data.name,
+        super_adm_id: data.super_adm_id,
+        subscription: {
+          connect: { id: data.subscription_id }
+        },
+        description: data.description,
+      },
       include: {
         invited_users: {
           select: {
