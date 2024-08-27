@@ -30,9 +30,9 @@ export default class UpdateUserService {
     private hashProvider: IHashProvider,
   ) { }
 
-public async execute({
-  id, name, nickname, email, profession, specialization, phone, password, city, state,
-}: IRequest): Promise<Users> {
+  public async execute({
+    id, name, nickname, email, profession, specialization, phone, password, city, state,
+  }: IRequest): Promise<Users> {
     const userAlreadyExists = await this.usersRepository.findById(id);
 
     if (!userAlreadyExists) throw new AppError('User with this id does not exist');
@@ -40,18 +40,19 @@ public async execute({
     const hashedPassword = await this.hashProvider.generateHash(password);
 
     const updatedUser = this.usersRepository.update(
-    id,
-    {
-      name,
-      nickname,
-      email: email.toLowerCase(),
-      profession,
-      specialization,
-      phone,
-      password: hashedPassword,
-      city,
-      state,
-    });
+      id,
+      {
+        name,
+        nickname,
+        email: email.toLowerCase(),
+        profession,
+        specialization,
+        phone,
+        password: hashedPassword,
+        city,
+        state,
+      },
+    );
 
     return updatedUser;
   }

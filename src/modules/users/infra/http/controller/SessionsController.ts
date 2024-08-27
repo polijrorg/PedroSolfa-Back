@@ -14,10 +14,10 @@ export default class SessionsController {
 
     const { user, token } = await authenticateUser.execute({ email, password });
 
-    if(user){
+    if (user) {
       user.password = '###';
     }
-    
+
     return res.json({ user, token });
   }
 }

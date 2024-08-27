@@ -12,7 +12,6 @@ export default class ReadAllGroupsService {
   ) { }
 
   public async execute(): Promise<Groups[] | null> {
-
     const groups = this.groupsRepository.findAll();
 
     return groups;

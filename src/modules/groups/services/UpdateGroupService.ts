@@ -18,18 +18,19 @@ export default class UpdateUserService {
     private groupsRepository: IGroupsRepository,
   ) { }
 
-public async execute({
-  id, name,
-}: IRequest): Promise<Groups> {
+  public async execute({
+    id, name,
+  }: IRequest): Promise<Groups> {
     const groupAlreadyExists = await this.groupsRepository.findById(id);
 
     if (!groupAlreadyExists) throw new AppError('Group with this id does not exist');
 
     const updatedGroup = this.groupsRepository.update(
-    id,
-    {
-      name,
-    });
+      id,
+      {
+        name,
+      },
+    );
 
     return updatedGroup;
   }

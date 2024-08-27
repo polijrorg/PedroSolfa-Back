@@ -1,15 +1,15 @@
 import { Router } from 'express';
-
+import ensureAuthenticated from '@shared/infra/http/middlewares/EnsureAuthenticated';
 import GroupsController from '../controller/GroupsController';
 
 const groupsRoutes = Router();
 
 const groupsController = new GroupsController();
 
-groupsRoutes.post('/register', groupsController.create);
-groupsRoutes.get('/read', groupsController.readAll);
-groupsRoutes.get('/read/:id', groupsController.readById);
-groupsRoutes.patch('/update/:id', groupsController.update);
-groupsRoutes.delete('/delete/:id', groupsController.delete);
+groupsRoutes.post('/register', ensureAuthenticated, groupsController.create);
+groupsRoutes.get('/read', ensureAuthenticated, groupsController.readAll);
+groupsRoutes.get('/read/:id', ensureAuthenticated, groupsController.readById);
+groupsRoutes.patch('/update/:id', ensureAuthenticated, groupsController.update);
+groupsRoutes.delete('/delete/:id', ensureAuthenticated, groupsController.delete);
 
 export default groupsRoutes;

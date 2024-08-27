@@ -1,0 +1,19 @@
+model Plans {
+  id              String   @id @default(uuid())
+  name            String   
+  price           Float
+  max_users       Int
+  created_at      DateTime @default(now())
+  updated_at      DateTime @default(now())
+}
+
+model Groups {
+  id               String            @id @default(uuid())
+  super_adm_id     String   
+  super_adm        Users             @relation("SuperAdm", fields: [super_adm_id], references: [id]) 
+}
+
+model Users {
+  id               String            @id @default(uuid())
+  super_groups     Groups[]          @relation("SuperAdm")
+}
