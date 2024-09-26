@@ -6,7 +6,7 @@ import ICreateGroupDTO from '@modules/groups/dtos/ICreateGroupDTO';
 import IUpdateGroupDTO from '@modules/groups/dtos/IUpdateGroupDTO';
 
 export default class GroupsRepository implements IGroupsRepository {
-  private ormRepository: Prisma.GroupsDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+  private ormRepository;
 
   constructor() {
     this.ormRepository = prisma.groups;
@@ -46,6 +46,20 @@ export default class GroupsRepository implements IGroupsRepository {
             name: true,
           },
         },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            users: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          }
+        },
       },
     });
 
@@ -77,6 +91,20 @@ export default class GroupsRepository implements IGroupsRepository {
             email: true,
             name: true,
           },
+        },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            users: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          }
         },
       },
     });
@@ -111,6 +139,20 @@ export default class GroupsRepository implements IGroupsRepository {
             name: true,
           },
         },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            users: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          }
+        },
       },
     });
 
@@ -143,6 +185,20 @@ export default class GroupsRepository implements IGroupsRepository {
             email: true,
             name: true,
           },
+        },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            users: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          }
         },
       },
     });
@@ -177,6 +233,20 @@ export default class GroupsRepository implements IGroupsRepository {
             email: true,
             name: true,
           },
+        },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            users: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          }
         },
       },
     });

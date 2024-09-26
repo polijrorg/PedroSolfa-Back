@@ -8,27 +8,14 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Groups {
-  id             String          @id @default(uuid())
-  subscription   Subscriptions?
-  super_adm_id   String
-  super_adm      Users           @relation("SuperAdm", fields: [super_adm_id], references: [id])
-  users          Users[]         @relation("GroupUsers")
-  adms           Users[]         @relation("GroupAdmins")
-  invited_users  Users[]         @relation("InvitedUsers")
-  invited_adms   Users[]         @relation("InvitedAdms")
-  invited_emails InvitedEmails[] @relation("GroupInvitedEmails")
-  name           String
-  description    String
-  created_at     DateTime        @default(now())
-  updated_at     DateTime        @default(now())
-}
-
-model InvitedEmails {
-  id       String @id @default(uuid())
-  email    String
-  group_id String
-  group    Groups @relation("GroupInvitedEmails", fields: [group_id], references: [id])
+model Duties {
+  id          String   @id @default(uuid())
+  description String?
+  date        DateTime
+  duration    Int
+  users       Users[]
+  group_id    String
+  group       Groups   @relation(fields: [group_id], references: [id])
 }
 
 model Users {
@@ -51,6 +38,31 @@ model Users {
   adm_groups     Groups[]        @relation("GroupAdmins")
   invited_groups Groups[]        @relation("InvitedUsers")
   invited_adms   Groups[]        @relation("InvitedAdms")
+  duties         Duties[]
+}
+
+model Groups {
+  id             String          @id @default(uuid())
+  subscription   Subscriptions?
+  super_adm_id   String
+  super_adm      Users           @relation("SuperAdm", fields: [super_adm_id], references: [id])
+  users          Users[]         @relation("GroupUsers")
+  adms           Users[]         @relation("GroupAdmins")
+  invited_users  Users[]         @relation("InvitedUsers")
+  invited_adms   Users[]         @relation("InvitedAdms")
+  invited_emails InvitedEmails[] @relation("GroupInvitedEmails")
+  name           String
+  description    String
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @default(now())
+  duties         Duties[]
+}
+
+model InvitedEmails {
+  id       String @id @default(uuid())
+  email    String
+  group_id String
+  group    Groups @relation("GroupInvitedEmails", fields: [group_id], references: [id])
 }
 
 model Plans {
