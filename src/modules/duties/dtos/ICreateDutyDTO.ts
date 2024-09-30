@@ -3,5 +3,5 @@ interface ICreateDutyDTO {
   date: Date;
   duration: number;
   group_id: string;
-  users_id: string[];
+  users: { id: string; role?: string }[];
 }

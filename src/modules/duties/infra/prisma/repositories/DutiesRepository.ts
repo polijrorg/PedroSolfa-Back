@@ -11,103 +11,192 @@ export default class DutiesRepository implements IDutiesRepository {
   constructor() {
     this.ormRepository = prisma.duties;
   }
-  create(data: ICreateDutyDTO): Promise<Duties> {
-    return this.ormRepository.create({ 
+
+  async create(data: ICreateDutyDTO): Promise<Duties> {
+    const duty = await this.ormRepository.create({
       data: {
         description: data.description,
         date: data.date,
         duration: data.duration,
         group_id: data.group_id,
-        users: {
-          connect: data.users_id ? data.users_id.map((id: string) => ({ id })) : []
+      }
+    });
+
+    const usersOnDuty = await prisma.usersOnDuty.createMany({
+      data: data.users.map((user: { id: string; role?: string }) => ({
+      user_id: user.id,
+      duty_id: duty.id,
+      role: user.role?.toUpperCase()
+      })),
+      skipDuplicates: true
+    });
+
+    const usersOnDutyArray = await prisma.usersOnDuty.findMany({
+      where: {
+        duty_id: duty.id
+      },
+      select: {
+        id: true,
+      }
+    });
+
+    const usersOnDutyIds = await usersOnDutyArray.map((user: { id: string }) => user.id);
+
+    return this.ormRepository.update({
+      where: { id: duty.id },
+      data: {
+        usersOnDuty: {
+          set: usersOnDutyIds ? usersOnDutyIds.map((id: string) => ({ id })) : []
         }
       },
       include: {
-        users: {
+        usersOnDuty: {
           select: {
             id: true,
-            name: true
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+            },
+            role: true
           }
         }
       }
     });
   }
+
   findAll(group_id: string): Promise<Duties[]> {
     return this.ormRepository.findMany({
       where: {
         group_id
       },
       include: {
-        users: {
+        usersOnDuty: {
           select: {
             id: true,
-            name: true
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+            },
+            role: true
           }
         }
       }
     });
   }
+
   findById(id: string): Promise<Duties | null> {
     return this.ormRepository.findFirst({ 
       where: { id }, 
       include: {
-        users: {
+        usersOnDuty: {
           select: {
             id: true,
-            name: true
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+            },
+            role: true
           }
         }
       }
     });
   }
-  delete(id: string): Promise<Duties> {
+
+  async delete(id: string): Promise<Duties> {
+    await prisma.usersOnDuty.deleteMany({
+      where: {
+        duty_id: id
+      }
+    });
+
     return this.ormRepository.delete({ 
-      where: { id },
-      include: {
-        users: {
-          select: {
-            id: true,
-            name: true
-          }
-        }
-      }
+      where: { id }
     });
   }
-  update(id: string, data: IUpdateDutyDTO): Promise<Duties> {
+
+  async update(id: string, data: IUpdateDutyDTO): Promise<Duties> {
+    await prisma.usersOnDuty.deleteMany({
+      where: {
+        duty_id: id
+      }
+    });
+
+    const usersOnDuty = await prisma.usersOnDuty.createMany({
+      data: data.users.map((user: { id: string; role?: string }) => ({
+      user_id: user.id,
+      duty_id: id,
+      role: user.role?.toUpperCase()
+      })),
+      skipDuplicates: true
+    });
+
+    const usersOnDutyArray = await prisma.usersOnDuty.findMany({
+      where: {
+        duty_id: id
+      },
+      select: {
+        id: true,
+      }
+    });
+
+    const usersOnDutyIds = await usersOnDutyArray.map((user: { id: string }) => user.id);
+
     return this.ormRepository.update({
       where: { id },
       data: {
         description: data.description,
         date: data.date,
         duration: data.duration,
-        users: {
-          set: data.users_id ? data.users_id.map((id: string) => ({ id })) : []
+        group_id: data.group_id,
+        usersOnDuty: {
+          set: usersOnDutyIds ? usersOnDutyIds.map((id: string) => ({ id })) : []
         }
       },
       include: {
-        users: {
+        usersOnDuty: {
           select: {
             id: true,
-            name: true
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+            },
+            role: true
           }
         }
       }
     });
   }
+
   findUserDuties(user_id: string): Promise<Duties[]> {
     return this.ormRepository.findMany({
       where: {
-        users: {
+        usersOnDuty: {
           some: {
-            id: user_id
+            user: {
+              id: user_id
+            }
           }
         }
       },
       include: {
-        users: {
+        usersOnDuty: {
           select: {
             id: true,
-            name: true
+            user: {
+              select: {
+                id: true,
+                name: true
+              }
+            },
+            role: true
           }
         }
       }

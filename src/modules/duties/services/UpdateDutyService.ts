@@ -11,7 +11,7 @@ interface IRequest {
   description: string;
   date: Date;
   duration: number;
-  users_id: string[];
+  users: { id: string; role?: string }[];
 }
 
 @injectable()
@@ -22,7 +22,7 @@ export default class UpdateUserService {
   ) { }
 
   public async execute({
-    id, description, date, duration, users_id
+    id, description, date, duration, users
   }: IRequest): Promise<Duties> {
     const dutyAlreadyExists = await this.dutiesRepository.findById(id);
 
@@ -34,7 +34,7 @@ export default class UpdateUserService {
         description,
         date,
         duration,
-        users_id,
+        users,
       },
     );
 

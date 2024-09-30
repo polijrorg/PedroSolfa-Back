@@ -1,6 +1,6 @@
-interface ICreateDutyDTO {
+interface IUpdateDutyDTO {
   description: string;
   date: Date;
   duration: number;
-  users_id: string[];
+  users: { id: string; role?: string }[];
 }

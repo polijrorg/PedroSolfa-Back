@@ -25,6 +25,7 @@ export default class GroupsRepository implements IGroupsRepository {
       include: {
         invited_users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -36,12 +37,14 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
         },
         adms: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -52,12 +55,18 @@ export default class GroupsRepository implements IGroupsRepository {
             description: true,
             date: true,
             duration: true,
-            users: {
+            usersOnDuty: {
               select: {
                 id: true,
-                name: true,
-              },
-            },
+                user: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
+                },
+                role: true
+              }
+            }
           }
         },
       },
@@ -71,6 +80,7 @@ export default class GroupsRepository implements IGroupsRepository {
       include: {
         invited_users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -82,12 +92,14 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
         },
         adms: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -98,12 +110,18 @@ export default class GroupsRepository implements IGroupsRepository {
             description: true,
             date: true,
             duration: true,
-            users: {
+            usersOnDuty: {
               select: {
                 id: true,
-                name: true,
-              },
-            },
+                user: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
+                },
+                role: true
+              }
+            }
           }
         },
       },
@@ -118,6 +136,7 @@ export default class GroupsRepository implements IGroupsRepository {
       include: {
         invited_users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -129,12 +148,14 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
         },
         adms: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -145,12 +166,18 @@ export default class GroupsRepository implements IGroupsRepository {
             description: true,
             date: true,
             duration: true,
-            users: {
+            usersOnDuty: {
               select: {
                 id: true,
-                name: true,
-              },
-            },
+                user: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
+                },
+                role: true
+              }
+            }
           }
         },
       },
@@ -165,6 +192,7 @@ export default class GroupsRepository implements IGroupsRepository {
       include: {
         invited_users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -176,12 +204,14 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
         },
         adms: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -192,12 +222,18 @@ export default class GroupsRepository implements IGroupsRepository {
             description: true,
             date: true,
             duration: true,
-            users: {
+            usersOnDuty: {
               select: {
                 id: true,
-                name: true,
-              },
-            },
+                user: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
+                },
+                role: true
+              }
+            }
           }
         },
       },
@@ -213,6 +249,7 @@ export default class GroupsRepository implements IGroupsRepository {
       include: {
         invited_users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -224,12 +261,14 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
         },
         adms: {
           select: {
+            id: true,
             email: true,
             name: true,
           },

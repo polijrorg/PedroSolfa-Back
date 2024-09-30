@@ -15,7 +15,7 @@ export default class DutyController {
       date,
       duration,
       group_id,
-      users_id,
+      users,
     } = req.body;
 
     const createDuty = container.resolve(CreateDutyService);
@@ -25,7 +25,7 @@ export default class DutyController {
       date,
       duration,
       group_id,
-      users_id,
+      users,
     });
 
     return res.status(201).json(duty);
@@ -60,7 +60,7 @@ export default class DutyController {
       description,
       date,
       duration,
-      users_id,
+      users,
     } = req.body;
 
     const updateDuty = container.resolve(UpdateDutyService);
@@ -70,7 +70,7 @@ export default class DutyController {
       description,
       date,
       duration,
-      users_id,
+      users,
     });
 
     return res.status(201).json(duty);

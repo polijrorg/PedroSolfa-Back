@@ -9,13 +9,22 @@ generator client {
 }
 
 model Duties {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   description String?
   date        DateTime
   duration    Int
-  users       Users[]
   group_id    String
-  group       Groups   @relation(fields: [group_id], references: [id])
+  group       Groups        @relation(fields: [group_id], references: [id])
+  usersOnDuty UsersOnDuty[]
+}
+
+model UsersOnDuty {
+  id      String  @id @default(uuid())
+  user_id String
+  duty_id String
+  role    String?
+  user    Users   @relation(fields: [user_id], references: [id])
+  duty    Duties  @relation(fields: [duty_id], references: [id])
 }
 
 model Users {
@@ -38,7 +47,7 @@ model Users {
   adm_groups     Groups[]        @relation("GroupAdmins")
   invited_groups Groups[]        @relation("InvitedUsers")
   invited_adms   Groups[]        @relation("InvitedAdms")
-  duties         Duties[]
+  duties         UsersOnDuty[]
 }
 
 model Groups {

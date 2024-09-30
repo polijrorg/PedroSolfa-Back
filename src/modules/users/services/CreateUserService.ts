@@ -63,19 +63,19 @@ export default class CreateUserService {
 
     await this.invitesRepository.updateInvites(email);
 
-    const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');
+    // const templateDataFile = path.resolve(__dirname, '..', 'views', 'create_account.hbs');
 
-    await this.mailProvider.sendMail({
-      to: {
-        name,
-        email,
-      },
-      subject: 'Criação de conta',
-      templateData: {
-        file: templateDataFile,
-        variables: { name },
-      },
-    });
+    // await this.mailProvider.sendMail({
+    //   to: {
+    //     name,
+    //     email,
+    //   },
+    //   subject: 'Criação de conta',
+    //   templateData: {
+    //     file: templateDataFile,
+    //     variables: { name },
+    //   },
+    // });
 
     return user;
   }

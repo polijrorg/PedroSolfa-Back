@@ -3,14 +3,23 @@ model Duties {
   description     String?
   date            DateTime
   duration        Int
-  users           Users[]
   group_id        String
   group           Groups @relation(fields: [group_id], references: [id])
+  usersOnDuty     UsersOnDuty[]
+}
+
+model UsersOnDuty {
+  id              String   @id @default(uuid())
+  user_id         String
+  duty_id         String
+  role            String?
+  user            Users @relation(fields: [user_id], references: [id])
+  duty            Duties @relation(fields: [duty_id], references: [id])
 }
 
 model Users {
   id              String   @id @default(uuid())
-  duties          Duties[]
+  duties          UsersOnDuty[]
 }
 
 model Groups {

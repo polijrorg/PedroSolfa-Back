@@ -9,7 +9,7 @@ interface IRequest {
   date: Date;
   duration: number;
   group_id: string;
-  users_id: string[];
+  users: { id: string; role?: string }[];
 }
 
 @injectable()
@@ -23,7 +23,7 @@ export default class CreateGroupService {
   ) { }
 
   public async execute({
-    description, date, duration, group_id, users_id
+    description, date, duration, group_id, users
   }: IRequest): Promise<Duties> {
 
     const group = await this.groupsRepository.findById(group_id);
@@ -34,7 +34,7 @@ export default class CreateGroupService {
       date,
       duration,
       group_id,
-      users_id,
+      users,
     });
 
     return duty;
