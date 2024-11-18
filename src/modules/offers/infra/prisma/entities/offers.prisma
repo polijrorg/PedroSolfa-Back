@@ -1,0 +1,33 @@
+model Offers {
+  id                    String              @id @default(uuid())
+  offering_user_id      String
+  offering_user         Users               @relation("OfferingUser", fields: [offering_user_id], references: [id])
+  offering_user_duty_id String
+  offering_user_duty    Duties              @relation("OfferingUserDuty", fields: [offering_user_duty_id], references: [id])
+  offer_propositions    OfferPropositions[] @relation("Offer")
+  closed                Boolean
+  }
+
+model OfferPropositions {
+  id                       String            @id @default(uuid())
+  offer_id                 String
+  offer                    Offers            @relation("Offer", fields: [offer_id], references: [id])
+  proposition_user_id      String
+  proposition_user         Users             @relation("PropositionUser", fields: [proposition_user_id], references: [id])
+  proposition_user_duty_id String
+  proposition_user_duty    Duties            @relation("PropositionUserDuty", fields: [proposition_user_duty_id], references: [id])
+  analized                 Boolean           @default(false)
+  accepted                 Boolean           @default(false)
+}
+
+model Duties {
+  id                      String              @id @default(uuid())
+  offering_user_duties    Offers[]            @relation("OfferingUserDuty")
+  offer_propositions      OfferPropositions[] @relation("PropositionUserDuty")
+}
+
+model Users {
+  id                 String               @id @default(uuid())
+  sent_offers        Offers[]             @relation("OfferingUser")
+  offer_propositions OfferPropositions[]  @relation("PropositionUser")
+}
