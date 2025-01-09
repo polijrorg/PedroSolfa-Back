@@ -6,6 +6,7 @@ import ReadAllUsersService from '@modules/users/services/ReadAllUsersService';
 import ReadUserByIdService from '@modules/users/services/ReadUserByIdService';
 import DeleteUserService from '@modules/users/services/DeleteUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
+import generateUserImageUrl from '@shared/infra/http/middlewares/GenerateUserImageUrl';
 
 export default class UsersController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -22,6 +23,8 @@ export default class UsersController {
       state,
     } = req.body;
 
+    const image = req.file ? req.file.buffer : undefined;
+
     const createUser = container.resolve(CreateUserService);
 
     const user = await createUser.execute({
@@ -35,11 +38,13 @@ export default class UsersController {
       password,
       city,
       state,
+      image,
     });
 
     return res.status(201).json({
       ...user,
       password: undefined,
+      image: user ? await generateUserImageUrl(user) : null,
     });
   }
 
@@ -51,6 +56,7 @@ export default class UsersController {
     return res.status(201).json(users?.map((user) => ({
       ...user,
       password: undefined,
+      image: undefined,
     })));
   }
 
@@ -63,11 +69,11 @@ export default class UsersController {
       id,
     });
 
-    if (user) {
-      user.password = '###';
-    }
-
-    return res.status(201).json(user);
+    return res.status(201).json({
+      ...user,
+      password: undefined,
+      image: user ? await generateUserImageUrl(user) : null,
+    });
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
@@ -85,6 +91,8 @@ export default class UsersController {
       state,
     } = req.body;
 
+    const image = req.file ? req.file.buffer : undefined;
+
     const updateUser = container.resolve(UpdateUserService);
 
     const user = await updateUser.execute({
@@ -98,11 +106,13 @@ export default class UsersController {
       password,
       city,
       state,
+      image,
     });
 
     return res.status(201).json({
       ...user,
       password: undefined,
+      image: user ? await generateUserImageUrl(user) : null,
     });
   }
 
@@ -118,6 +128,7 @@ export default class UsersController {
     return res.status(201).json({
       ...user,
       password: undefined,
+      image: undefined,
     });
   }
 }

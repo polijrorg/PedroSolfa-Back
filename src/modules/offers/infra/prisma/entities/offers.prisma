@@ -6,7 +6,7 @@ model Offers {
   offering_user_duty    Duties              @relation("OfferingUserDuty", fields: [offering_user_duty_id], references: [id])
   offer_propositions    OfferPropositions[] @relation("Offer")
   closed                Boolean
-  }
+}
 
 model OfferPropositions {
   id                       String            @id @default(uuid())
