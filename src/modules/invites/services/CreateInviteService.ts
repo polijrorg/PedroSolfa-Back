@@ -8,6 +8,8 @@ import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import IInvitesRepository from '../repositories/IInvitesRepository';
 
+import sgMail from '@sendgrid/mail';
+
 interface IRequest {
   id: string;
   group_id: string;
@@ -50,6 +52,40 @@ export default class CreateInviteService {
       group_id,
       email,
     });
+
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+    const msg = {
+      to: email,
+      from: 'tassyla.lima@polijunior.com.br',
+      subject: `esKlando | Convite para participar do grupo ${groupExists.name}`,
+      text: `<div style="background-color: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      <h1 style="font-size: 24px; color: #0056b3;">Olá!</h1>
+      <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+        Você foi convidad@ para participar do grupo <strong>${groupExists.name}</strong> no esKlando.
+        Acesse o link abaixo para se juntar ao grupo:
+      </p>
+      <a href="xxxxx" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold;">
+        Junte-se ao grupo
+      </a>
+    </div>`,
+      html: `<div style="background-color: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      <h1 style="font-size: 24px; color: #0056b3;">Olá!</h1>
+      <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+        Você foi convidad@ para participar do grupo <strong>${groupExists.name}</strong> no esKlando.
+        Acesse o link abaixo para se juntar ao grupo:
+      </p>
+      <a href="xxxxx" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold;">
+        Junte-se ao grupo
+      </a>
+    </div>`
+    };
+
+    try {
+      await sgMail.send(msg);
+      console.log('Email sent');
+    } catch (error: any) {
+      console.error(error);
+    }
 
     return invite;
   }

@@ -18,9 +18,12 @@ export default class DutyController {
       users,
     } = req.body;
 
+    const { id } = req.token;
+
     const createDuty = container.resolve(CreateDutyService);
 
     const duty = await createDuty.execute({
+      solicitor_id: id,
       description,
       date,
       duration,
@@ -54,7 +57,8 @@ export default class DutyController {
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
+    const { duty_id } = req.params;
+    const { id } = req.token;
 
     const {
       description,
@@ -66,7 +70,8 @@ export default class DutyController {
     const updateDuty = container.resolve(UpdateDutyService);
 
     const duty = await updateDuty.execute({
-      id,
+      solicitor_id: id,
+      id: duty_id,
       description,
       date,
       duration,
@@ -77,12 +82,14 @@ export default class DutyController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params;
+    const { duty_id } = req.params;
+    const { id } = req.token;
 
     const deleteDuty = container.resolve(DeleteDutyService);
 
     const duty = await deleteDuty.execute({
-      id,
+      solicitor_id: id,
+      id: duty_id,
     });
 
     return res.status(201).json(duty);

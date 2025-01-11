@@ -11,6 +11,7 @@ interface IUsersRepository {
   findById(id: string): Promise<Users | null>;
   delete(id: string): Promise<Users>;
   update(id: string, data: IUpdateUserDTO): Promise<Users>;
+  registeredUsers(ids: string[]): Promise<boolean>;
 }
 
 export default IUsersRepository;

@@ -9,8 +9,8 @@ const dutiesController = new DutiesController();
 dutiesRoutes.post('/register', ensureAuthenticated, dutiesController.create);
 dutiesRoutes.get('/readAll/:group_id', ensureAuthenticated, dutiesController.readAll);
 dutiesRoutes.get('/read/:id', ensureAuthenticated, dutiesController.readById);
-dutiesRoutes.patch('/update/:id', ensureAuthenticated, dutiesController.update);
-dutiesRoutes.delete('/delete/:id', ensureAuthenticated, dutiesController.delete);
+dutiesRoutes.patch('/update/:duty_id', ensureAuthenticated, dutiesController.update);
+dutiesRoutes.delete('/delete/:duty_id', ensureAuthenticated, dutiesController.delete);
 dutiesRoutes.get('/userDuties', ensureAuthenticated, dutiesController.readUserDuties);
 
 export default dutiesRoutes;

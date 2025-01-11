@@ -1,4 +1,4 @@
-interface ICreateDutyDTO {
+export default interface ICreateDutyDTO {
   description: string;
   date: Date;
   duration: number;
