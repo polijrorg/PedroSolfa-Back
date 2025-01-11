@@ -1,0 +1,28 @@
+model Duties {
+  id              String   @id @default(uuid())
+  description     String?
+  date            DateTime
+  duration        Int
+  group_id        String
+  group           Groups @relation(fields: [group_id], references: [id])
+  usersOnDuty     UsersOnDuty[]
+}
+
+model UsersOnDuty {
+  id              String   @id @default(uuid())
+  user_id         String
+  duty_id         String
+  role            String?
+  user            Users @relation(fields: [user_id], references: [id])
+  duty            Duties @relation(fields: [duty_id], references: [id])
+}
+
+model Users {
+  id              String   @id @default(uuid())
+  duties          UsersOnDuty[]
+}
+
+model Groups {
+  id              String   @id @default(uuid())
+  duties          Duties[]
+}

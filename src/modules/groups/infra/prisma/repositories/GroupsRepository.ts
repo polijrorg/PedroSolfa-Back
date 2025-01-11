@@ -6,7 +6,7 @@ import ICreateGroupDTO from '@modules/groups/dtos/ICreateGroupDTO';
 import IUpdateGroupDTO from '@modules/groups/dtos/IUpdateGroupDTO';
 
 export default class GroupsRepository implements IGroupsRepository {
-  private ormRepository: Prisma.GroupsDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+  private ormRepository;
 
   constructor() {
     this.ormRepository = prisma.groups;
@@ -25,6 +25,7 @@ export default class GroupsRepository implements IGroupsRepository {
       include: {
         invited_users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -36,15 +37,37 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
         },
         adms: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
+        },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            usersOnDuty: {
+              select: {
+                id: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
+                },
+                role: true
+              }
+            }
+          }
         },
       },
     });
@@ -57,6 +80,7 @@ export default class GroupsRepository implements IGroupsRepository {
       include: {
         invited_users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -68,15 +92,37 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
         },
         adms: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
+        },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            usersOnDuty: {
+              select: {
+                id: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
+                },
+                role: true
+              }
+            }
+          }
         },
       },
     });
@@ -90,6 +136,7 @@ export default class GroupsRepository implements IGroupsRepository {
       include: {
         invited_users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -101,15 +148,37 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
         },
         adms: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
+        },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            usersOnDuty: {
+              select: {
+                id: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
+                },
+                role: true
+              }
+            }
+          }
         },
       },
     });
@@ -123,6 +192,7 @@ export default class GroupsRepository implements IGroupsRepository {
       include: {
         invited_users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -134,15 +204,37 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
         },
         adms: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
+        },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            usersOnDuty: {
+              select: {
+                id: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
+                },
+                role: true
+              }
+            }
+          }
         },
       },
     });
@@ -157,6 +249,7 @@ export default class GroupsRepository implements IGroupsRepository {
       include: {
         invited_users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -168,15 +261,31 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         users: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
         },
         adms: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
+        },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            users: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          }
         },
       },
     });

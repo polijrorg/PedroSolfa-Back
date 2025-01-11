@@ -12,9 +12,12 @@ import IPlansRepository from '@modules/plans/repositories/IPlansRepository';
 import PlansRepository from '@modules/plans/infra/prisma/repositories/PlansRepository';
 import ISubscriptionsRepository from '@modules/subscriptions/repositories/ISubscriptionsRepository';
 import SubscriptionsRepository from '@modules/subscriptions/infra/prisma/repositories/SubscriptionsRepository';
+import IDutiesRepository from '@modules/duties/repositories/IDutiesRepository';
+import DutiesRepository from '@modules/duties/infra/prisma/repositories/DutiesRepository';
 
 container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository);
 container.registerSingleton<IGroupsRepository>('GroupsRepository', GroupsRepository);
 container.registerSingleton<IInvitesRepository>('InvitesRepository', InvitesRepository);
 container.registerSingleton<IPlansRepository>('PlansRepository', PlansRepository);
 container.registerSingleton<ISubscriptionsRepository>('SubscriptionsRepository', SubscriptionsRepository);
+container.registerSingleton<IDutiesRepository>('DutiesRepository', DutiesRepository);
