@@ -43,6 +43,7 @@ model Users {
   password           String
   city               String
   state              String
+  image              String?
   created_at         DateTime            @default(now())
   updated_at         DateTime            @default(now())
   received_switches  Switches[]          @relation("NewUser")

@@ -8,6 +8,7 @@ interface IUpdateUserDTO {
   password: string;
   city: string;
   state: string;
+  image?: string | null;
 }
 
 export default IUpdateUserDTO;
