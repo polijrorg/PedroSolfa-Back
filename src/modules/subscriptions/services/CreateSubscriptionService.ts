@@ -17,6 +17,7 @@ export default class CreateUserService {
   public async execute({
     user_id, plan_id,
   }: IRequest): Promise<Subscriptions> {
+
     const subscription = await this.subscriptionsRepository.create({
       user_id,
       plan_id,
