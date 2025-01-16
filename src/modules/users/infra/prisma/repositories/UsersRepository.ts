@@ -6,11 +6,23 @@ import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 import IUpdateUserDTO from '@modules/users/dtos/IUpdateUserDTO';
 
 export default class UsersRepository implements IUsersRepository {
-  private ormRepository: Prisma.UsersDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+  private ormRepository;
 
   constructor() {
     this.ormRepository = prisma.users;
   }
+  public async  registeredUsers(ids: string[]): Promise<boolean> {
+    const users = await this.ormRepository.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+
+    return users.length === ids.length;
+  }
+ 
 
   public async findByEmailWithRelations(email: string): Promise<Users | null> {
     const user = await this.ormRepository.findFirst({
@@ -180,6 +192,14 @@ export default class UsersRepository implements IUsersRepository {
   }
 
   public async delete(id: string): Promise<Users> {
+    await prisma.usersOnDuty.deleteMany({
+      where: { user_id: id },
+    });
+
+    await prisma.switches.deleteMany({
+      where: { new_user_id: id },
+    });
+    
     const user = await this.ormRepository.delete({
       where: { id },
       include: {

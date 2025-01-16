@@ -8,6 +8,57 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Duties {
+  id                   String              @id @default(uuid())
+  new_user_duties      Switches[]          @relation("NewUserDuty")
+  actual_user_duties   Switches[]          @relation("ActualUserDuty")
+  offering_user_duties Offers[]            @relation("OfferingUserDuty")
+  offer_propositions   OfferPropositions[] @relation("PropositionUserDuty")
+  description          String?
+  date                 DateTime
+  duration             Int
+  group_id             String
+  group                Groups              @relation(fields: [group_id], references: [id])
+  usersOnDuty          UsersOnDuty[]
+}
+
+model UsersOnDuty {
+  id      String  @id @default(uuid())
+  user_id String
+  duty_id String
+  role    String?
+  user    Users   @relation(fields: [user_id], references: [id])
+  duty    Duties  @relation(fields: [duty_id], references: [id])
+}
+
+model Users {
+  id                 String              @id @default(uuid())
+  name               String
+  nickname           String
+  email              String              @unique
+  cpf                String              @unique
+  profession         String
+  specialization     String
+  phone              String              @unique
+  password           String
+  city               String
+  state              String
+  image              String?
+  created_at         DateTime            @default(now())
+  updated_at         DateTime            @default(now())
+  received_switches  Switches[]          @relation("NewUser")
+  sent_switches      Switches[]          @relation("ActualUser")
+  subscriptions      Subscriptions[]
+  super_groups       Groups[]            @relation("SuperAdm")
+  sent_offers        Offers[]            @relation("OfferingUser")
+  offer_propositions OfferPropositions[] @relation("PropositionUser")
+  user_groups        Groups[]            @relation("GroupUsers")
+  adm_groups         Groups[]            @relation("GroupAdmins")
+  invited_groups     Groups[]            @relation("InvitedUsers")
+  invited_adms       Groups[]            @relation("InvitedAdms")
+  duties             UsersOnDuty[]
+}
+
 model Groups {
   id             String          @id @default(uuid())
   subscription   Subscriptions?
@@ -22,6 +73,7 @@ model Groups {
   description    String
   created_at     DateTime        @default(now())
   updated_at     DateTime        @default(now())
+  duties         Duties[]
 }
 
 model InvitedEmails {
@@ -31,26 +83,26 @@ model InvitedEmails {
   group    Groups @relation("GroupInvitedEmails", fields: [group_id], references: [id])
 }
 
-model Users {
-  id             String          @id @default(uuid())
-  name           String
-  nickname       String
-  email          String          @unique
-  cpf            String          @unique
-  profession     String
-  specialization String
-  phone          String          @unique
-  password       String
-  city           String
-  state          String
-  created_at     DateTime        @default(now())
-  updated_at     DateTime        @default(now())
-  subscriptions  Subscriptions[]
-  super_groups   Groups[]        @relation("SuperAdm")
-  user_groups    Groups[]        @relation("GroupUsers")
-  adm_groups     Groups[]        @relation("GroupAdmins")
-  invited_groups Groups[]        @relation("InvitedUsers")
-  invited_adms   Groups[]        @relation("InvitedAdms")
+model Offers {
+  id                    String              @id @default(uuid())
+  offering_user_id      String
+  offering_user         Users               @relation("OfferingUser", fields: [offering_user_id], references: [id])
+  offering_user_duty_id String
+  offering_user_duty    Duties              @relation("OfferingUserDuty", fields: [offering_user_duty_id], references: [id])
+  offer_propositions    OfferPropositions[] @relation("Offer")
+  closed                Boolean
+}
+
+model OfferPropositions {
+  id                       String  @id @default(uuid())
+  offer_id                 String
+  offer                    Offers  @relation("Offer", fields: [offer_id], references: [id])
+  proposition_user_id      String
+  proposition_user         Users   @relation("PropositionUser", fields: [proposition_user_id], references: [id])
+  proposition_user_duty_id String
+  proposition_user_duty    Duties  @relation("PropositionUserDuty", fields: [proposition_user_duty_id], references: [id])
+  analized                 Boolean @default(false)
+  accepted                 Boolean @default(false)
 }
 
 model Plans {
@@ -73,4 +125,18 @@ model Subscriptions {
   group_id   String?  @unique
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+}
+
+model Switches {
+  id                  String  @id @default(uuid())
+  new_user_id         String
+  new_user            Users   @relation("NewUser", fields: [new_user_id], references: [id])
+  new_user_duty_id    String
+  new_user_duty       Duties  @relation("NewUserDuty", fields: [new_user_duty_id], references: [id])
+  actual_user_id      String
+  actual_user         Users   @relation("ActualUser", fields: [actual_user_id], references: [id])
+  actual_user_duty_id String
+  actual_user_duty    Duties  @relation("ActualUserDuty", fields: [actual_user_duty_id], references: [id])
+  analized            Boolean
+  accepted            Boolean
 }
