@@ -43,8 +43,8 @@ export default class CreateUserService {
     @inject('HashProvider')
     private hashProvider: IHashProvider,
 
-    @inject('MailProvider')
-    private mailProvider: IMailProvider,
+    // @inject('MailProvider')
+    // private mailProvider: IMailProvider,
   ) { }
 
   public async execute({
