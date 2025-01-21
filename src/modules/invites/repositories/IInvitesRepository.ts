@@ -14,6 +14,7 @@ interface IInvitesRepository {
   isAlreadyAdm(group_id: string, id: string): Promise<Groups | null>;
   turnIntoAdm(group_id: string, user_id: string): Promise<Groups>;
   defaultAdm(group_id: string, user_id: string): Promise<Groups>;
+  readInvitesByUser(user_id: string): Promise<Groups[]>;
 }
 
 export default IInvitesRepository;

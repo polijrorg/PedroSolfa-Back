@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateSubscriptionService from '@modules/subscriptions/services/CreateSubscriptionService';
 import ReadAllSubscriptionsService from '@modules/subscriptions/services/ReadAllSubscriptionsService';
 import ReadSubscriptionByIdService from '@modules/subscriptions/services/ReadSubscriptionByIdService';
+import ReadSubscriptionByUSerIdService from '@modules/subscriptions/services/ReadSubscriptionByUserIdService';
 
 export default class SubscriptionController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -37,6 +38,18 @@ export default class SubscriptionController {
 
     const subscription = await readSubscription.execute({
       id: subscription_id,
+    });
+
+    return res.status(201).json(subscription);
+  }
+
+  public async readByUserId(req: Request, res: Response): Promise<Response> {
+    const { user_id } = req.params;
+
+    const readSubscriptionByUserId = container.resolve(ReadSubscriptionByUSerIdService);
+
+    const subscription = await readSubscriptionByUserId.execute({
+      id: user_id,
     });
 
     return res.status(201).json(subscription);
