@@ -5,7 +5,7 @@ import ISubscriptionsRepository from '@modules/subscriptions/repositories/ISubsc
 import ICreateSubscriptionDTO from '@modules/subscriptions/dtos/ICreateSubscriptionDTO';
 
 export default class SubscriptionsRepository implements ISubscriptionsRepository {
-  private ormRepository: Prisma.SubscriptionsDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+  private ormRepository;
 
   constructor() {
     this.ormRepository = prisma.subscriptions;
@@ -37,6 +37,14 @@ export default class SubscriptionsRepository implements ISubscriptionsRepository
       where: { id },
       data: {
         group_id
+      }
+    });
+  }
+
+  public findByUserId(user_id: string): Promise<Subscriptions[]> {
+    return this.ormRepository.findMany({
+      where: {
+        user_id
       }
     });
   }

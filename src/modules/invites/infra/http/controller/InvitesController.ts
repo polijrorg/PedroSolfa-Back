@@ -7,6 +7,7 @@ import DeleteInviteService from '@modules/invites/services/DeleteInviteService';
 import AcceptInviteService from '@modules/invites/services/AcceptInviteService';
 import RejectInviteService from '@modules/invites/services/RejectInviteService';
 import TurnIntoAdmService from '@modules/invites/services/TurnIntoAdmService';
+import ReadInvitesByUserIdService from '@modules/invites/services/ReadInvitesByUserIdService';
 
 export default class InvitesController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -37,6 +38,18 @@ export default class InvitesController {
     const user = await readUser.execute({
       id,
       group_id,
+    });
+
+    return res.status(201).json(user);
+  }
+
+  public async readInvitesByUser(req: Request, res: Response): Promise<Response> {
+    const { user_id } = req.params;
+
+    const readInvites = container.resolve(ReadInvitesByUserIdService);
+
+    const user = await readInvites.execute({
+      user_id,
     });
 
     return res.status(201).json(user);

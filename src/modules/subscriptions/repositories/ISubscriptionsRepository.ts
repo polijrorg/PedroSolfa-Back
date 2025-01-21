@@ -8,6 +8,7 @@ interface ISubscriptionsRepository {
   findAll(user_id: string): Promise<Subscriptions[]>;
   groupIsVinculated(id: string): Promise<Subscriptions | null>;
   vinculateGroup(id: string, group_id: string): Promise<Subscriptions>;
+  findByUserId(user_id: string): Promise<Subscriptions[]>;
 }
 
 export default ISubscriptionsRepository;

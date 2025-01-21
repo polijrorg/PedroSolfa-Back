@@ -340,4 +340,27 @@ export default class InvitesRepository implements IInvitesRepository {
       },
     });
   }
+
+  async readInvitesByUser(user_id: string): Promise<Groups[]> {
+    return await prisma.groups.findMany({
+      where: {
+        invited_users: {
+          some: { id: user_id },
+        },
+      },
+      include: {
+        invited_users: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+        invited_emails: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+  }
 }

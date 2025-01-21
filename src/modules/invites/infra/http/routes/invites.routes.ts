@@ -8,6 +8,7 @@ const invitesController = new InvitesController();
 
 invitesRoutes.post('/register', ensureAuthenticated, invitesController.create);
 invitesRoutes.get('/read/:group_id', ensureAuthenticated, invitesController.readAllInvitesByGroup);
+invitesRoutes.get('/readByUser/:user_id', ensureAuthenticated, invitesController.readInvitesByUser);
 invitesRoutes.delete('/delete/:group_id', ensureAuthenticated, invitesController.delete);
 invitesRoutes.post('/accept', ensureAuthenticated, invitesController.accept);
 invitesRoutes.post('/reject', ensureAuthenticated, invitesController.reject);
