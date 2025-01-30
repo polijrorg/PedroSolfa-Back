@@ -22,8 +22,6 @@ export default class ReadUserByIdService {
 
     if (!userAlreadyExists) throw new AppError('User with this id does not exist');
 
-    const user = this.usersRepository.findById(id);
-
-    return user;
+    return userAlreadyExists;
   }
 }
