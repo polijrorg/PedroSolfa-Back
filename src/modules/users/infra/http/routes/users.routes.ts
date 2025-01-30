@@ -13,6 +13,7 @@ const upload = multer({ storage: storage});
 usersRoutes.post('/register', upload.single('image'), usersController.create);
 usersRoutes.get('/readAll', usersController.readAll);
 usersRoutes.get('/read', ensureAuthenticated, usersController.readById);
+usersRoutes.get('/readByEmail', ensureAuthenticated, usersController.readByEmail);
 usersRoutes.patch('/update', upload.single('image'), ensureAuthenticated, usersController.update);
 usersRoutes.delete('/delete', ensureAuthenticated, usersController.delete);
 

@@ -7,6 +7,7 @@ import ReadUserByIdService from '@modules/users/services/ReadUserByIdService';
 import DeleteUserService from '@modules/users/services/DeleteUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 import generateUserImageUrl from '@shared/infra/http/middlewares/GenerateUserImageUrl';
+import ReadUserByEmailService from '@modules/users/services/ReadUserByEmailService';
 
 export default class UsersController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -67,6 +68,22 @@ export default class UsersController {
 
     const user = await readUser.execute({
       id,
+    });
+
+    return res.status(201).json({
+      ...user,
+      password: undefined,
+      image: user ? await generateUserImageUrl(user) : null,
+    });
+  }
+
+  public async readByEmail(req: Request, res: Response): Promise<Response> {
+    const { email } = req.body;
+
+    const readUser = container.resolve(ReadUserByEmailService);
+
+    const user = await readUser.execute({
+      email,
     });
 
     return res.status(201).json({

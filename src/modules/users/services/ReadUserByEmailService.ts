@@ -7,20 +7,20 @@ import AppError from '@shared/errors/AppError';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 interface IRequest {
-  id: string;
+  email: string;
 }
 
 @injectable()
-export default class ReadUserByIdService {
+export default class ReadUserByEmailService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
   ) { }
 
-  public async execute({ id }: IRequest): Promise<Users | null> {
-    const userAlreadyExists = await this.usersRepository.findById(id);
+  public async execute({ email }: IRequest): Promise<Users | null> {
+    const userAlreadyExists = await this.usersRepository.findByEmailWithRelations(email);
 
-    if (!userAlreadyExists) throw new AppError('User with this id does not exist');
+    if (!userAlreadyExists) throw new AppError('User with this email does not exist');
 
     return userAlreadyExists;
   }
