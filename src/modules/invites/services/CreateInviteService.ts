@@ -48,6 +48,9 @@ export default class CreateInviteService {
     const isAdm = await this.invitesRepository.isAlreadyAdm(group_id, id);
     if (!isAdm) throw new AppError('You are not an adm of this group');
 
+    const groupIsFull = await this.groupsRepository.groupIsFull(group_id);
+    if (groupIsFull) throw new AppError('This group is full');
+
     const invite = this.invitesRepository.create({
       group_id,
       email,

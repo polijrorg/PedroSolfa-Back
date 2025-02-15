@@ -16,15 +16,15 @@ const secretAccessKey = process.env.SECRET_ACCESS_KEY
 
 interface IRequest {
     id: string;
-    name: string;
-    nickname: string;
-    email: string;
-    profession: string;
-    specialization: string;
-    phone: string;
-    password: string;
-    city: string;
-    state: string;
+    name?: string;
+    nickname?: string;
+    email?: string;
+    profession?: string;
+    specialization?: string;
+    phone?: string;
+    password?: string;
+    city?: string;
+    state?: string;
     image?: string | Buffer | null;
   }
 
@@ -47,57 +47,57 @@ export default class UpdateUserService {
 
     if (email) {
       const userWithUpdatedEmail = await this.usersRepository.findByEmailWithRelations(email.toLowerCase());
-      if (userWithUpdatedEmail) {
-        if (userWithUpdatedEmail.id == id) {
-          throw new AppError('You cannot update your email to the same email');
+        if (userWithUpdatedEmail && userWithUpdatedEmail.id !== id) {
+          throw new AppError('Another user with same email already exists');
         }
-        if (userWithUpdatedEmail.id !== id) {
-          throw new AppError('User with same email already exists');
-        }
-      }
     }
 
-    const hashedPassword = await this.hashProvider.generateHash(password);
+    if(password){
+      const hashedPassword = await this.hashProvider.generateHash(password);
+      userAlreadyExists.password = hashedPassword;
+    }
 
-    const s3 = new S3Client({
-      region: bucketRegion,
-      credentials: {
-        accessKeyId: accessKey as string,
-        secretAccessKey: secretAccessKey as string
-      }
-    });
+    if(image){
+      const s3 = new S3Client({
+        region: bucketRegion,
+        credentials: {
+          accessKeyId: accessKey as string,
+          secretAccessKey: secretAccessKey as string
+        }
+      });
 
-    if (image && s3) {
+      if (s3) {
       
-      const buffer = await sharp(image).resize({height: 300, width: 300, fit: 'contain'}).png().toBuffer();
-      image = userAlreadyExists.image;
-      const params = {
-        Bucket: bucketName,
-        Key: `${id}.png`,
-        Body: buffer,
-        ContentType: 'image/png',
-      };
-
-      try {
-        await s3.send(new PutObjectCommand(params));
-        image = `${id}.png`;
-      } catch (error: any) {
-        throw new AppError('Error uploading image to S3');
+        const buffer = await sharp(image).resize({height: 300, width: 300, fit: 'contain'}).png().toBuffer();
+        image = userAlreadyExists.image;
+        const params = {
+          Bucket: bucketName,
+          Key: `${id}.png`,
+          Body: buffer,
+          ContentType: 'image/png',
+        };
+  
+        try {
+          await s3.send(new PutObjectCommand(params));
+          image = `${id}.png`;
+        } catch (error: any) {
+          throw new AppError('Error uploading image to S3');
+        }
       }
     }
 
     const updatedUser = this.usersRepository.update(
       id,
       {
-        name,
-        nickname,
-        email: email.toLowerCase(),
-        profession,
-        specialization,
-        phone,
-        password: hashedPassword,
-        city,
-        state,
+        name: name ? name : userAlreadyExists.name,
+        nickname: nickname ? nickname : userAlreadyExists.nickname,
+        email: email ? email.toLowerCase() : userAlreadyExists.email,
+        profession: profession ? profession : userAlreadyExists.profession,
+        specialization: specialization ? specialization : userAlreadyExists.specialization,
+        phone: phone ? phone : userAlreadyExists.phone,
+        password: userAlreadyExists.password,
+        city: city ? city : userAlreadyExists.city,
+        state: state ? state : userAlreadyExists.state,
         image: typeof image === 'string' ? image : userAlreadyExists.image,
       },
     );

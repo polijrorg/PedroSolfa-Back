@@ -9,6 +9,7 @@ interface IGroupsRepository {
   findById(id: string): Promise<Groups | null>;
   delete(id: string): Promise<Groups>;
   update(id: string, data: IUpdateGroupDTO): Promise<Groups>;
+  groupIsFull(id: string): Promise<boolean>;
 }
 
 export default IGroupsRepository;
