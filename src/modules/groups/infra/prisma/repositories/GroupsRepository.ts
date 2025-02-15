@@ -279,10 +279,14 @@ export default class GroupsRepository implements IGroupsRepository {
             description: true,
             date: true,
             duration: true,
-            users: {
+            usersOnDuty: {
               select: {
-                id: true,
-                name: true,
+                user:{
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                }
               },
             },
           }
@@ -291,5 +295,47 @@ export default class GroupsRepository implements IGroupsRepository {
     });
 
     return group;
+  }
+
+  public async groupIsFull(id: string): Promise<boolean> {
+    const group = await this.ormRepository.findFirst({
+      where: { id },
+      include: {
+        invited_users: {
+          select: {
+            id: true,
+          },
+        },
+        invited_emails: {
+          select: {
+            email: true,
+          },
+        },
+        users: {
+          select: {
+            id: true,
+          },
+        },
+        adms: {
+          select: {
+            id: true,
+          },
+        },
+        subscription: {
+          select: {
+            plan:{
+              select: {
+                max_users: true
+            }
+          },
+        },
+      },
+    },
+    });
+
+    if (!group) return false;
+
+    const totalMembers = group.invited_users.length + group.invited_emails.length + group.users.length + group.adms.length;
+    return group.subscription ? totalMembers >= group.subscription.plan.max_users : false;
   }
 }
