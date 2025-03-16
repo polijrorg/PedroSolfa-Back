@@ -6,7 +6,7 @@ import ReadAllUsersService from '@modules/users/services/ReadAllUsersService';
 import ReadUserByIdService from '@modules/users/services/ReadUserByIdService';
 import DeleteUserService from '@modules/users/services/DeleteUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
-import generateUserImageUrl from '@shared/infra/http/middlewares/GenerateUserImageUrl';
+import { generateUserImageUrl } from '@shared/infra/http/middlewares/GenerateUserImageUrl';
 import ReadUserByEmailService from '@modules/users/services/ReadUserByEmailService';
 
 export default class UsersController {

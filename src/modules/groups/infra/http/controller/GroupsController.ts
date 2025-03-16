@@ -6,6 +6,7 @@ import ReadAllGroupsService from '@modules/groups/services/ReadAllGroupsService'
 import ReadGroupByIdService from '@modules/groups/services/ReadGroupByIdService';
 import DeleteGroupService from '@modules/groups/services/DeleteGroupService';
 import UpdateGroupService from '@modules/groups/services/UpdateGroupService';
+import { generateUserImageUrlbyId } from '@shared/infra/http/middlewares/GenerateUserImageUrl';
 
 export default class GroupController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -46,6 +47,32 @@ export default class GroupController {
       id,
     });
 
+    // prisma does not considre the fields that I included in the include object's response
+    if (group) {
+      let image;
+        // @ts-ignore
+      for (let i = 0; i < group.invited_users.length; i++) {
+        // @ts-ignore
+        image = await generateUserImageUrlbyId(group.invited_users[i].id);
+        // @ts-ignore
+        group.invited_users[i].image = image;
+      }
+      // @ts-ignore
+      for (let i = 0; i < group.users.length; i++) {
+        // @ts-ignore
+        image = await generateUserImageUrlbyId(group.users[i].id);
+        // @ts-ignore
+        group.users[i].image = image;
+      }
+      // @ts-ignore
+      for (let i = 0; i < group.adms.length; i++) {
+        // @ts-ignore
+        image = await generateUserImageUrlbyId(group.adms[i].id);
+        // @ts-ignore
+        group.adms[i].image = image;
+      }
+    }
+    
     return res.status(201).json(group);
   }
 
