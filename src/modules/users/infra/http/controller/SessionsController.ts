@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
-import generateUserImageUrl from '@shared/infra/http/middlewares/GenerateUserImageUrl';
+import { generateUserImageUrl } from '@shared/infra/http/middlewares/GenerateUserImageUrl';
 
 export default class SessionsController {
   public async create(req: Request, res: Response): Promise<Response> {
