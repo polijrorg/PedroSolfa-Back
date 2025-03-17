@@ -4,6 +4,7 @@ import { Prisma, Duties, Groups } from '@prisma/client';
 import IDutiesRepository from '@modules/duties/repositories/IDutiesRepository';
 import ICreateDutyDTO from '@modules/duties/dtos/ICreateDutyDTO';
 import IUpdateDutyDTO from '@modules/duties/dtos/IUpdateDutyDTO';
+import IUserOnDuty from '@modules/duties/dtos/IUserOnDutyDTO';
 import { OmittedDutyWithUsers } from '@modules/duties/repositories/IDutiesRepository';
 
 export default class DutiesRepository implements IDutiesRepository {
@@ -310,5 +311,45 @@ export default class DutiesRepository implements IDutiesRepository {
     });
 
     return [updatedActualUserDuty, updatedNewUserDuty];
+  }
+
+  async findDutyByUserOnDutyId(user_on_duty_id: string): Promise<IUserOnDuty | null> {
+    const duty = await this.ormRepository.findFirst({
+      where: {
+        usersOnDuty: {
+          some: {
+            id: user_on_duty_id
+          }
+        }
+      }, 
+      include: {
+        usersOnDuty: {
+          select: {
+            id: true,
+            role: true,
+            user: {
+              select: {
+                id: true,
+              }
+            },
+          }
+        }
+      }
+    });
+
+    if (duty){
+      // @ts-ignore
+      for (const userOnDuty of duty.usersOnDuty){
+        if (userOnDuty.id === user_on_duty_id){
+          // @ts-ignore
+          return { // @ts-ignore
+            user_id: userOnDuty.user.id, // @ts-ignore
+            duty_id: duty.id,
+          }
+        }
+      }
+    }
+
+    return null;
   }
 }

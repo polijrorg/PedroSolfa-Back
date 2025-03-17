@@ -7,8 +7,6 @@ const accessKey = process.env.ACCESS_KEY
 const secretAccessKey = process.env.SECRET_ACCESS_KEY
 
 export async function generateUserImageUrl(user: Users): Promise<string | null> {
-  console.log(`1`);
-
   let url = null;
 
   if (user.image) {
@@ -34,7 +32,6 @@ export async function generateUserImageUrl(user: Users): Promise<string | null> 
 }
 
 export async function generateUserImageUrlbyId(userId: string): Promise<string | null> {
-  console.log(`2`);
   let url = null;
 
   if (userId) {
