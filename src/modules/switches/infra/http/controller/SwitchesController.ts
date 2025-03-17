@@ -11,9 +11,8 @@ import ReadSwitchByIdService from '@modules/switches/services/ReadSwitchByIdServ
 export default class SwitchesController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      new_user_duty_id,
-      actual_user_id,
-      actual_user_duty_id,
+      user_on_duty_id,
+      user_on_another_duty_id,
     } = req.body;
 
     const { id } = req.token;
@@ -21,10 +20,8 @@ export default class SwitchesController {
     const createSwitch = container.resolve(CreateSwitchService);
 
     const switchEl = await createSwitch.execute({
-      new_user_id: id,
-      new_user_duty_id,
-      actual_user_id,
-      actual_user_duty_id,
+      user_on_duty_id,
+      user_on_another_duty_id,
     });
 
     return res.status(201).json(switchEl);

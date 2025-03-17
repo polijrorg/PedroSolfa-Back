@@ -2,6 +2,7 @@ import { Groups, Duties } from '@prisma/client';
 
 import ICreateDutyDTO from '../dtos/ICreateDutyDTO';
 import IUpdateDutyDTO from '../dtos/IUpdateDutyDTO';
+import IUserOnDuty from '../dtos/IUserOnDutyDTO';
 
 export type UserOnDuty = {
   id: string;
@@ -24,6 +25,7 @@ interface IDutiesRepository {
   findUserDuty(user_id: string, duty_id: string): Promise<Duties | null>;
   dutiesOnSameGroup(actual_user_duty_id: string, new_user_duty_id: string): Promise<Groups | null>;
   switchUsersOnDuty(actual_user_id: string, actual_user_duty_id: string, new_user_id: string, new_user_duty_id: string): Promise<Duties[]>;
+  findDutyByUserOnDutyId(user_on_duty_id: string): Promise<IUserOnDuty | null>;
 }
 
 export default IDutiesRepository;

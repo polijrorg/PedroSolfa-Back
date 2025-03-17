@@ -25,7 +25,7 @@ export default class ReadSwitchesByIdService {
 
     // verificar quais usuários podem acessar a troca
     
-    const dutyExists = await this.dutiesRepository.findById(switch_id);
+    const dutyExists = await this.switchesRepository.findById(switch_id);
     if (!dutyExists) throw new AppError('Switch with this id does not exist');
 
     const switchEl = await this.switchesRepository.findById(switch_id);
