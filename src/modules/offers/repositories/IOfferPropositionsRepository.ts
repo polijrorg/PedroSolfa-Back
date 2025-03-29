@@ -6,8 +6,10 @@ interface IOfferPropositionsRepository {
   findById(id: string): Promise<OfferPropositions | null>
   offerPropositionAlreadyExists(offer_id: string, user_id: string): Promise<OfferPropositions | null>;
   delete(id: string): Promise<OfferPropositions>;
+  deleteByOfferId(offer_id: string): Promise<OfferPropositions[] | null>;
   accept(id: string): Promise<OfferPropositions>;
   refuse(id: string): Promise<OfferPropositions>;
+  closeAllOfferPropositions(offer_id: string): Promise<OfferPropositions[]>;
 }
 
 export default IOfferPropositionsRepository;
