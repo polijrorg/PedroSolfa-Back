@@ -8,7 +8,7 @@ import DeleteUserService from '@modules/users/services/DeleteUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 import { generateUserImageUrl } from '@shared/infra/http/middlewares/GenerateUserImageUrl';
 import ReadUserByEmailService from '@modules/users/services/ReadUserByEmailService';
-import SendPinToUserEmailService from '@modules/users/services/SendPinToUserEmailService';
+import SendPinToUserEmailService from '@modules/users/services/SendPinToUserEmailService.tS';
 import ResetPasswordService from '@modules/users/services/ResetPasswordService';
 import VerifyPinService from '@modules/users/services/VerifyPinService';
 
