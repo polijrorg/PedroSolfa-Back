@@ -38,6 +38,22 @@ export default class OfferPropositionsRepository implements IOfferPropositionsRe
     });
   }
 
+  deleteByOfferId(offer_id: string): Promise<OfferPropositions[] | null> {
+    const deletedOfferPropositions = prisma.offerPropositions.findMany({
+      where: {
+        offer_id
+      }
+    });
+
+    prisma.offerPropositions.deleteMany({
+      where: {
+        offer_id
+      }
+    });
+
+    return deletedOfferPropositions;
+  }
+
   accept(id: string): Promise<OfferPropositions> {
     return prisma.offerPropositions.update({
       where: {
@@ -69,5 +85,24 @@ export default class OfferPropositionsRepository implements IOfferPropositionsRe
         offer_id
       }
     });
+  }
+
+  closeAllOfferPropositions(offer_id: string): Promise<OfferPropositions[]> {
+    const offerPropositions = prisma.offerPropositions.findMany({
+      where: {
+        offer_id
+      }
+    });
+
+    prisma.offerPropositions.updateMany({
+      where: {
+        offer_id
+      },
+      data: {
+        analized: true
+      }
+    });
+
+    return offerPropositions;
   }
 }

@@ -31,6 +31,24 @@ export default class OffersRepository implements IOffersRepository {
     });
   }
 
+  findAllOpen(duty_id: string): Promise<Offers[]> {
+    return prisma.offers.findMany({
+      where: {
+        offering_user_duty_id: duty_id,
+        closed: false
+      }
+    });
+  }
+
+  findAllClosed(duty_id: string): Promise<Offers[]> {
+    return prisma.offers.findMany({
+      where: {
+        offering_user_duty_id: duty_id,
+        closed: true
+      }
+    });
+  }
+
   delete(id: string): Promise<Offers> {
     return prisma.offers.delete({
       where: {
@@ -44,6 +62,17 @@ export default class OffersRepository implements IOffersRepository {
       where: {
         offering_user_id,
         offering_user_duty_id
+      }
+    });
+  }
+
+  close(offer_id: string): Promise<Offers> {
+    return prisma.offers.update({
+      where: {
+        id: offer_id
+      },
+      data: {
+        closed: true
       }
     });
   }
