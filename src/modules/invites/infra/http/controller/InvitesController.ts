@@ -43,6 +43,18 @@ export default class InvitesController {
     return res.status(201).json(user);
   }
 
+  public async readAllInvitesByUser(req: Request, res: Response): Promise<Response> {
+    const { id } = req.token;
+
+    const readUser = container.resolve(ReadInvitesByUserIdService);
+
+    const user = await readUser.execute({
+      user_id: id,
+    });
+
+    return res.status(201).json(user);
+  }
+
   public async readInvitesByUser(req: Request, res: Response): Promise<Response> {
     const { user_id } = req.params;
 

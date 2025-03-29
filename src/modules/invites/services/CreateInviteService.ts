@@ -6,9 +6,8 @@ import AppError from '@shared/errors/AppError';
 
 import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
-import IInvitesRepository from '../repositories/IInvitesRepository';
-
 import sgMail from '@sendgrid/mail';
+import IInvitesRepository from '../repositories/IInvitesRepository';
 
 interface IRequest {
   id: string;
@@ -40,7 +39,7 @@ export default class CreateInviteService {
     if (isAlreadyUser) throw new AppError('This user is already a member of this group');
 
     const user = await this.usersRepository.findByEmailWithRelations(email);
-    if(user){
+    if (user) {
       const isAlreadyAdm = await this.invitesRepository.isAlreadyAdm(group_id, user.id);
       if (isAlreadyAdm) throw new AppError('This user is already an adm of this group');
     }
@@ -80,7 +79,7 @@ export default class CreateInviteService {
       <a href="xxxxx" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold;">
         Junte-se ao grupo
       </a>
-    </div>`
+    </div>`,
     };
 
     try {

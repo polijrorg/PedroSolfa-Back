@@ -1,16 +1,18 @@
 model Users {
-  id              String   @id @default(uuid())
-  name            String   
-  nickname        String   
-  email           String   @unique
-  cpf             String   @unique
-  profession      String
-  specialization  String
-  phone           String   @unique
-  password        String
-  city            String
-  state           String
-  image           String?
-  created_at      DateTime @default(now())
-  updated_at      DateTime @default(now())
+  id             String    @id @default(uuid())
+  name           String
+  nickname       String
+  email          String    @unique
+  cpf            String    @unique
+  profession     String
+  specialization String
+  phone          String    @unique
+  password       String
+  pin            String?
+  pinExpires     DateTime?
+  city           String
+  state          String
+  image          String?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @default(now())
 }

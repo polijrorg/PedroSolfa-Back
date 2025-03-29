@@ -12,6 +12,8 @@ interface IUsersRepository {
   delete(id: string): Promise<Users>;
   update(id: string, data: IUpdateUserDTO): Promise<Users>;
   registeredUsers(ids: string[]): Promise<boolean>;
+  sendPinToUserEmail(email: string, pin: string, pinExpires: Date): Promise<Users>;
+  resetPassword(id: string, password: string): Promise<Users>;
 }
 
 export default IUsersRepository;

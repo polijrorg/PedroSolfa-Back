@@ -262,7 +262,7 @@ export default class InvitesRepository implements IInvitesRepository {
         id: group_id,
         users: {
           some: { id: user_id },
-        }, 
+        },
       },
     });
   }
@@ -273,7 +273,7 @@ export default class InvitesRepository implements IInvitesRepository {
         id: group_id,
         adms: {
           some: { id },
-        }, 
+        },
       },
     });
   }
