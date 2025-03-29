@@ -18,6 +18,8 @@ import ISwitchesRepository from '@modules/switches/repositories/ISwitchesReposit
 import SwitchesRepository from '@modules/switches/infra/prisma/repositories/SwitchesRepository';
 import IOffersRepository from '@modules/offers/repositories/IOffersRepository';
 import OffersRepository from '@modules/offers/infra/prisma/repositories/OffersRepository';
+import IOfferPropositionsRepository from '@modules/offers/repositories/IOfferPropositionsRepository';
+import OfferPropositionsRepository from '@modules/offers/infra/prisma/repositories/OfferPropositionsRepository';
 
 container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository);
 container.registerSingleton<IGroupsRepository>('GroupsRepository', GroupsRepository);
@@ -27,3 +29,4 @@ container.registerSingleton<ISubscriptionsRepository>('SubscriptionsRepository',
 container.registerSingleton<IDutiesRepository>('DutiesRepository', DutiesRepository);
 container.registerSingleton<ISwitchesRepository>('SwitchesRepository', SwitchesRepository);
 container.registerSingleton<IOffersRepository>('OffersRepository', OffersRepository);
+container.registerSingleton<IOfferPropositionsRepository>('OfferPropositionsRepository', OfferPropositionsRepository);

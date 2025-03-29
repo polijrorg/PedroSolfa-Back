@@ -24,11 +24,9 @@ export default class ReadOffersByIdService {
   public async execute({ id, offer_id }: IRequest): Promise<Offers | null> {
 
     // verificar quais usuários podem acessar a troca
-    
-    const dutyExists = await this.dutiesRepository.findById(offer_id);
-    if (!dutyExists) throw new AppError('Offer with this id does not exist');
 
     const offerEl = await this.offersRepository.findById(offer_id);
+    if (!offerEl) throw new AppError('Offer with this id does not exist');
 
     return offerEl;
   }

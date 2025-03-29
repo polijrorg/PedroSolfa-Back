@@ -5,17 +5,19 @@ import CreateOfferService from '@modules/offers/services/CreateOfferService';
 import ReadOffersByDutyIdService from '@modules/offers/services/ReadOffersByDutyIdService';
 import ReadAllOfferPropositionsService from '@modules/offers/services/ReadAllOfferPropositionsService';
 import DeleteOfferService from '@modules/offers/services/DeleteOfferService';
-import AcceptOfferService from '@modules/offers/services/AcceptOfferService';
-import RejectOfferService from '@modules/offers/services/RejectOfferService';
+import AcceptOfferService from '@modules/offers/services/AcceptOfferPropositionService';
+import RejectOfferService from '@modules/offers/services/RejectOfferPropositionService';
 import ReadOffersByIdService from '@modules/offers/services/ReadOfferByIdService';
 import MakeOfferPropositionService from '@modules/offers/services/MakeOfferPropositionService';
 import ReadOfferPropositionByIdService from '@modules/offers/services/ReadOfferPropositionByIdService';
 import DeleteOfferPropositionService from '@modules/offers/services/DeleteOfferPropositionService';
+import ReadOpenOffersByDutyIdService from '@modules/offers/services/ReadOpenOffersByDutyIdService';
+import ReadClosedOffersByDutyIdService from '@modules/offers/services/ReadClosedOffersByDutyIdService';
 
 export default class OffersController {
   public async create(req: Request, res: Response): Promise<Response> {
     const {
-      duty_id,
+      offering_user_on_duty_id,
     } = req.body;
 
     const { id } = req.token;
@@ -23,8 +25,8 @@ export default class OffersController {
     const createOffer = container.resolve(CreateOfferService);
 
     const offerEl = await createOffer.execute({
-      offering_user_id: id,
-      offering_user_duty_id: duty_id,
+      user_id: id,
+      offering_user_on_duty_id,
     });
 
     return res.status(201).json(offerEl);
@@ -49,6 +51,34 @@ export default class OffersController {
     const { id } = req.token;
 
     const readOffers = container.resolve(ReadOffersByDutyIdService);
+
+    const user = await readOffers.execute({
+      id,
+      duty_id,
+    });
+
+    return res.status(201).json(user);
+  }
+
+  public async readAllOpenOffersByDuty(req: Request, res: Response): Promise<Response> {
+    const { duty_id } = req.params;
+    const { id } = req.token;
+
+    const readOffers = container.resolve(ReadOpenOffersByDutyIdService);
+
+    const user = await readOffers.execute({
+      id,
+      duty_id,
+    });
+
+    return res.status(201).json(user);
+  }
+
+  public async readAllClosedOffersByDuty(req: Request, res: Response): Promise<Response> {
+    const { duty_id } = req.params;
+    const { id } = req.token;
+
+    const readOffers = container.resolve(ReadClosedOffersByDutyIdService);
 
     const user = await readOffers.execute({
       id,
@@ -88,14 +118,14 @@ export default class OffersController {
 
   public async makeOfferProposition(req: Request, res: Response): Promise<Response> {
     const { id } = req.token;
-    const { offer_id, duty_id } = req.body;
+    const { offer_id, user_on_duty_id } = req.body;
 
     const makeOfferProposition = container.resolve(MakeOfferPropositionService);
 
     const group = await makeOfferProposition.execute({
       user_id: id,
-      user_duty_id: duty_id,
-      offer_id
+      offer_id,
+      user_on_duty_id,
     });
 
     return res.status(201).json(group);
@@ -103,14 +133,12 @@ export default class OffersController {
 
   public async accept(req: Request, res: Response): Promise<Response> {
     const { id } = req.token;
-    const { offer_id } = req.body;
     const { offer_proposition_id } = req.params;
 
     const acceptOffer = container.resolve(AcceptOfferService);
 
     const group = await acceptOffer.execute({
-      id: offer_proposition_id,
-      offer_id,
+      offer_proposition_id,
       user_id: id,
     });
 
@@ -119,14 +147,12 @@ export default class OffersController {
 
   public async reject(req: Request, res: Response): Promise<Response> {
     const { id } = req.token;
-    const { offer_id } = req.body;
     const { offer_proposition_id } = req.params;
 
     const rejectOffer = container.resolve(RejectOfferService);
 
     const group = await rejectOffer.execute({
-      id: offer_proposition_id,
-      offer_id,
+      offer_proposition_id,
       user_id: id,
     });
 

@@ -9,8 +9,8 @@ import IOffersRepository from '@modules/offers/repositories/IOffersRepository';
 import IDutiesRepository from '@modules/duties/repositories/IDutiesRepository';
 
 interface IRequest {
-  offering_user_id: string;
-  offering_user_duty_id: string;
+  user_id: string;
+  offering_user_on_duty_id: string;
 }
 
 @injectable()
@@ -25,17 +25,15 @@ export default class CreateOfferService {
   ) { }
 
   public async execute({
-    offering_user_id, offering_user_duty_id,
+    offering_user_on_duty_id, user_id
   }: IRequest): Promise<Offers> {
 
-    const offeringUserDuty = await this.dutiesRepository.findById(offering_user_duty_id);
-    if (!offeringUserDuty) throw new AppError('Duty with this id does not exist');
+    const offering_user_on_duty = await this.dutiesRepository.findDutyByUserOnDutyId(offering_user_on_duty_id);
+    if (!offering_user_on_duty) throw new AppError('This user on duty id does not exist');
+    const offering_user_id = offering_user_on_duty.user_id;
+    const offering_user_duty_id = offering_user_on_duty.duty_id;
 
-    const offeringUser = await this.usersRepository.findById(offering_user_id);
-    if (!offeringUser) throw new AppError('User with this id does not exist');
-
-    const verifyIfOfferingUserIsOnDuty = await this.dutiesRepository.findUserDuty(offering_user_id, offering_user_duty_id);
-    if (!verifyIfOfferingUserIsOnDuty) throw new AppError('User is not on this duty');
+    if(user_id != offering_user_id) throw new AppError('You cannot make an offer on others behalf');
 
     const offerAlreadyExists = await this.offersRepository.offerAlreadyExists(offering_user_id, offering_user_duty_id);
     if (offerAlreadyExists) throw new AppError('Offer already exists');
