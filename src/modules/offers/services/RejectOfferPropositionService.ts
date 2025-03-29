@@ -8,9 +8,8 @@ import IOfferPropositionsRepository from '../repositories/IOfferPropositionsRepo
 import IOffersRepository from '../repositories/IOffersRepository';
 
 interface IRequest {
-  id: string;
+  offer_proposition_id: string;
   user_id: string;
-  offer_id: string;
 }
 
 @injectable()
@@ -24,22 +23,20 @@ export default class RejectOfferPropositionService {
   ) { }
 
   public async execute({
-    id, user_id, offer_id
+    offer_proposition_id, user_id
   }: IRequest): Promise<OfferPropositions> {
-    const offerEl = await this.offersRepository.findById(offer_id);
-    if (!offerEl) throw new AppError('Offer with this id does not exist');
-
-    const offerProposition = await this.offerPropositionsRepository.findById(id);
+    const offerProposition = await this.offerPropositionsRepository.findById(offer_proposition_id);
     if (!offerProposition) throw new AppError('Offer proposition does not exist');
 
-    if(offerEl.offering_user_id !== user_id) throw new AppError('User is not the responsible for this offer');
+    const offer = await this.offersRepository.findById(offerProposition.offer_id);
+    if( offer?.offering_user_id !== user_id) throw new AppError('User is not the responsible for this offer');
 
-    if(offerEl.closed) throw new AppError('Offer is closed');
+    if(offer.closed) throw new AppError('Offer is already closed');
 
-    if(offerProposition.offer_id !== offer_id) throw new AppError('Offer proposition does not belong to this offer');
+    const offerPropositionRejected = await this.offerPropositionsRepository.refuse(offer_proposition_id);
+    
+    const closeOffer = await this.offersRepository.close(offer.id);
 
-    const offerPropositionAccepted = this.offerPropositionsRepository.refuse(id);
-      
-    return offerPropositionAccepted;
+    return offerPropositionRejected;
   }
 }

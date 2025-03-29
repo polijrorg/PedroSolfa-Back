@@ -41,6 +41,8 @@ model Users {
   specialization     String
   phone              String              @unique
   password           String
+  pin                String?
+  pinExpires         DateTime?
   city               String
   state              String
   image              String?

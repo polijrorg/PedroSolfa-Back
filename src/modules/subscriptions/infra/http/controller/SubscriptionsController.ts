@@ -11,6 +11,9 @@ export default class SubscriptionController {
     const { plan_id } = req.body;
     const { id } = req.token;
 
+    console.log('ID', id);
+    console.log('PLAN ID', plan_id);
+
     const createSubscription = container.resolve(CreateSubscriptionService);
 
     const subscription = await createSubscription.execute({
@@ -23,7 +26,7 @@ export default class SubscriptionController {
 
   public async readAll(req: Request, res: Response): Promise<Response> {
     const { id } = req.token;
-    
+
     const readSubscriptions = container.resolve(ReadAllSubscriptionsService);
 
     const subscriptions = await readSubscriptions.execute(id);

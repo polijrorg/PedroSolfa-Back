@@ -5,15 +5,15 @@ import { Groups } from '@prisma/client';
 import AppError from '@shared/errors/AppError';
 
 import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
-import IInvitesRepository from '../repositories/IInvitesRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IInvitesRepository from '../repositories/IInvitesRepository';
 
 interface IRequest {
   user_id: string;
 }
 
 @injectable()
-export default class ReadInvitesByGroupIdService {
+export default class ReadInvitesByUserIdService {
   constructor(
     @inject('InvitesRepository')
     private invitesRepository: IInvitesRepository,
@@ -27,8 +27,9 @@ export default class ReadInvitesByGroupIdService {
     const user = await this.usersRepository.findById(user_id);
     if (!user) throw new AppError('User with this id does not exist');
 
-    const groups = this.invitesRepository.readInvitesByUser(user_id);
+    const groups = await this.invitesRepository.readInvitesByUser(user_id);
 
+    console.log(groups);
     return groups;
   }
 }

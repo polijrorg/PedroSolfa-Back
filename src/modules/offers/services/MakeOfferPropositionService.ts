@@ -11,7 +11,7 @@ import IOfferPropositionsRepository from '@modules/offers/repositories/IOfferPro
 
 interface IRequest {
   user_id: string;
-  user_duty_id: string;
+  user_on_duty_id: string;
   offer_id: string;
 }
 
@@ -29,17 +29,15 @@ export default class CreateOfferService {
   ) { }
 
   public async execute({
-    user_id, user_duty_id, offer_id
+    user_id, user_on_duty_id, offer_id
   }: IRequest): Promise<OfferPropositions> {
 
-    const offeringUserDuty = await this.dutiesRepository.findById(user_duty_id);
-    if (!offeringUserDuty) throw new AppError('Duty with this id does not exist');
+    const userOnDuty = await this.dutiesRepository.findDutyByUserOnDutyId(user_on_duty_id);
+    if (!userOnDuty) throw new AppError('This user on duty id does not exist');
+    const offering_user_duty_id = userOnDuty.duty_id;
+    const offering_user_id = userOnDuty.user_id;
 
-    const offeringUser = await this.usersRepository.findById(user_id);
-    if (!offeringUser) throw new AppError('User with this id does not exist');
-
-    const verifyIfOfferingUserIsOnDuty = await this.dutiesRepository.findUserDuty(user_id, user_duty_id);
-    if (!verifyIfOfferingUserIsOnDuty) throw new AppError('User is not on informed duty');
+    if(user_id != offering_user_id) throw new AppError('You cannot make an offer on others behalf');
 
     const offerExists = await this.offersRepository.findById(offer_id);
     if (!offerExists) throw new AppError('Offer with this id does not exist');
@@ -48,18 +46,18 @@ export default class CreateOfferService {
 
     if(offerExists.offering_user_id === user_id) throw new AppError('User is the responsible for this offer');
 
-    if(offerExists.offering_user_duty_id === user_duty_id) throw new AppError('You cannot offer on your own duty');
+    if(offerExists.offering_user_duty_id === offering_user_duty_id) throw new AppError('You cannot make an offer on your own duty');
 
-    const verifyIfDutiesAreOnTheSameGroup = await this.dutiesRepository.dutiesOnSameGroup(user_duty_id, user_duty_id);
+    const verifyIfDutiesAreOnTheSameGroup = await this.dutiesRepository.dutiesOnSameGroup(offerExists.offering_user_duty_id, offering_user_duty_id);
     if (!verifyIfDutiesAreOnTheSameGroup) throw new AppError('Duties are not on the same group');
 
-    const offerPropositionAlreadyExists = await this.offerPropositionsRepository.offerPropositionAlreadyExists(user_id, user_duty_id);
+    const offerPropositionAlreadyExists = await this.offerPropositionsRepository.offerPropositionAlreadyExists(offering_user_id, offering_user_duty_id);
     if (offerPropositionAlreadyExists) throw new AppError('Offer Proposition already exists');
 
     const offerEl = this.offerPropositionsRepository.create(
       offer_id,
       user_id,
-      user_duty_id,
+      offering_user_duty_id,
     );
 
     return offerEl;

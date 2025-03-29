@@ -11,7 +11,8 @@ export default class UsersRepository implements IUsersRepository {
   constructor() {
     this.ormRepository = prisma.users;
   }
-  public async  registeredUsers(ids: string[]): Promise<boolean> {
+
+  public async registeredUsers(ids: string[]): Promise<boolean> {
     const users = await this.ormRepository.findMany({
       where: {
         id: {
@@ -22,9 +23,9 @@ export default class UsersRepository implements IUsersRepository {
 
     return users.length === ids.length;
   }
- 
 
   public async findByEmailWithRelations(email: string): Promise<Users | null> {
+    console.log('email', email);
     const user = await this.ormRepository.findFirst({
       where: { email },
       include: {
@@ -60,6 +61,8 @@ export default class UsersRepository implements IUsersRepository {
         },
       },
     });
+
+    console.log('user', user);
 
     return user;
   }
@@ -199,7 +202,7 @@ export default class UsersRepository implements IUsersRepository {
     await prisma.switches.deleteMany({
       where: { new_user_id: id },
     });
-    
+
     const user = await this.ormRepository.delete({
       where: { id },
       include: {
@@ -278,5 +281,25 @@ export default class UsersRepository implements IUsersRepository {
     });
 
     return user;
+  }
+
+  public sendPinToUserEmail(email: string, pin: string, pinExpires: Date): Promise<Users> {
+    return this.ormRepository.update({
+      where: { email },
+      data: { pin, pinExpires },
+    });
+  }
+
+  public async resetPassword(id: string, password: string): Promise<Users> {
+    console.log('id', id);
+    console.log('password', password);
+    const updated = await this.ormRepository.update({
+      where: { id },
+      data: { password },
+    });
+
+    console.log('updated', updated);
+
+    return updated;
   }
 }

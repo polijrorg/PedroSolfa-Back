@@ -9,11 +9,11 @@ import IDutiesRepository from '@modules/duties/repositories/IDutiesRepository';
 
 interface IRequest {
   id: string;
-  offer_id: string;
+  duty_id: string;
 }
 
 @injectable()
-export default class ReadOffersByIdService {
+export default class ReadOffersByClosedDutyIdService {
   constructor(
     @inject('OffersRepository')
     private offersRepository: IOffersRepository,
@@ -21,12 +21,14 @@ export default class ReadOffersByIdService {
     private dutiesRepository: IDutiesRepository,
   ) { }
 
-  public async execute({ id, offer_id }: IRequest): Promise<Offers | null> {
+  public async execute({ id, duty_id }: IRequest): Promise<Offers[] | null> {
 
-    // verificar quais usuários podem acessar a troca
+    // verificar se deve ter restrições para visualizar
+    
+    const dutyExists = await this.dutiesRepository.findById(duty_id);
+    if (!dutyExists) throw new AppError('Duty with this id does not exist');
 
-    const offerEl = await this.offersRepository.findById(offer_id);
-    if (!offerEl) throw new AppError('Offer with this id does not exist');
+    const offerEl = await this.offersRepository.findAllClosed(duty_id);
 
     return offerEl;
   }
