@@ -10,6 +10,10 @@ interface ISwitchesRepository {
   switchAlreadyExists(new_user_id: string, new_user_duty_id: string, actual_user_id: string, actual_user_duty_id: string): Promise<Switches | null>;
   acceptSwitch(id: string): Promise<Switches>;
   refuseSwitch(id: string): Promise<Switches>;
+  readMySentSwitchesAnalyzed(user_id: string): Promise<Switches[]>
+  readMySentSwitchesPending(user_id: string): Promise<Switches[]>
+  readMyReceivedSwitchesPending(user_id: string): Promise<Switches[]>
+  readMyReceivedSwitchesAnalyzed(user_id: string): Promise<Switches[]>
 }
 
 export default ISwitchesRepository;

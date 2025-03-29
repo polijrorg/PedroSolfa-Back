@@ -13,35 +13,35 @@ export default class SwitchesRepository implements ISwitchesRepository {
         actual_user_id: data.actual_user_id,
         actual_user_duty_id: data.actual_user_duty_id,
         analized: false,
-        accepted: false
-      }
+        accepted: false,
+      },
     });
   }
-  
+
   findAll(duty_id: string): Promise<Switches[]> {
     return prisma.switches.findMany({
       where: {
         OR: [
           { new_user_duty_id: duty_id },
-          { actual_user_duty_id: duty_id }
-        ]
-      }
+          { actual_user_duty_id: duty_id },
+        ],
+      },
     });
   }
 
   findById(id: string): Promise<Switches | null> {
     return prisma.switches.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     });
   }
 
   delete(id: string): Promise<Switches> {
     return prisma.switches.delete({
       where: {
-        id
-      }
+        id,
+      },
     });
   }
 
@@ -51,32 +51,68 @@ export default class SwitchesRepository implements ISwitchesRepository {
         new_user_id,
         new_user_duty_id,
         actual_user_id,
-        actual_user_duty_id
-      }
+        actual_user_duty_id,
+      },
     });
   }
 
   acceptSwitch(id: string): Promise<Switches> {
     return prisma.switches.update({
       where: {
-        id
+        id,
       },
       data: {
         accepted: true,
-        analized: true
-      }
+        analized: true,
+      },
     });
   }
 
   refuseSwitch(id: string): Promise<Switches> {
     return prisma.switches.update({
       where: {
-        id
+        id,
       },
       data: {
         accepted: false,
-        analized: true
-      }
+        analized: true,
+      },
+    });
+  }
+
+  readMySentSwitchesAnalyzed(user_id: string): Promise<Switches[]> {
+    return prisma.switches.findMany({
+      where: {
+        actual_user_id: user_id,
+        analized: true,
+      },
+    });
+  }
+
+  readMySentSwitchesPending(user_id: string): Promise<Switches[]> {
+    return prisma.switches.findMany({
+      where: {
+        actual_user_id: user_id,
+        analized: false,
+      },
+    });
+  }
+
+  readMyReceivedSwitchesAnalyzed(user_id: string): Promise<Switches[]> {
+    return prisma.switches.findMany({
+      where: {
+        new_user_id: user_id,
+        analized: true,
+      },
+    });
+  }
+
+  readMyReceivedSwitchesPending(user_id: string): Promise<Switches[]> {
+    return prisma.switches.findMany({
+      where: {
+        new_user_id: user_id,
+        analized: false,
+      },
     });
   }
 }

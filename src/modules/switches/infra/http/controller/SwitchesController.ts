@@ -7,6 +7,10 @@ import DeleteSwitchService from '@modules/switches/services/DeleteSwitchService'
 import AcceptSwitchService from '@modules/switches/services/AcceptSwitchService';
 import RejectSwitchService from '@modules/switches/services/RejectSwitchService';
 import ReadSwitchByIdService from '@modules/switches/services/ReadSwitchByIdService';
+import ReadMyPendingSentSwitchsService from '@modules/switches/services/ReadMyPendingSentSwitchsService';
+import ReadMyPendingReceivedSwitchsService from '@modules/switches/services/ReadMyPendingReceivedSwitchsService';
+import ReadMyAceptedSentSwitchsService from '@modules/switches/services/ReadMyAceptedSentSwitchsService';
+import ReadMyAceptedReceivedSwitchsService from '@modules/switches/services/ReadMyAceptedReceivedSwitchsService';
 
 export default class SwitchesController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -25,6 +29,54 @@ export default class SwitchesController {
     });
 
     return res.status(201).json(switchEl);
+  }
+
+  public async readPendingSentSwitches(req: Request, res: Response): Promise<Response> {
+    const { id } = req.token;
+
+    const readUser = container.resolve(ReadMyPendingSentSwitchsService);
+
+    const user = await readUser.execute(
+      id,
+    );
+
+    return res.status(201).json(user);
+  }
+
+  public async readPendingReceivedSwitches(req: Request, res: Response): Promise<Response> {
+    const { id } = req.token;
+
+    const readUser = container.resolve(ReadMyPendingReceivedSwitchsService);
+
+    const user = await readUser.execute(
+      id,
+    );
+
+    return res.status(201).json(user);
+  }
+
+  public async readActiveSentSwitches(req: Request, res: Response): Promise<Response> {
+    const { id } = req.token;
+
+    const readUser = container.resolve(ReadMyAceptedSentSwitchsService);
+
+    const user = await readUser.execute(
+      id,
+    );
+
+    return res.status(201).json(user);
+  }
+
+  public async readActiveReceivedSwitches(req: Request, res: Response): Promise<Response> {
+    const { id } = req.token;
+
+    const readUser = container.resolve(ReadMyAceptedReceivedSwitchsService);
+
+    const user = await readUser.execute(
+      id,
+    );
+
+    return res.status(201).json(user);
   }
 
   public async readById(req: Request, res: Response): Promise<Response> {

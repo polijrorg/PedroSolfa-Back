@@ -12,5 +12,9 @@ switchesRoutes.get('/readAll/:duty_id', ensureAuthenticated, switchesController.
 switchesRoutes.delete('/delete/:switch_id', ensureAuthenticated, switchesController.delete);
 switchesRoutes.post('/accept', ensureAuthenticated, switchesController.accept);
 switchesRoutes.post('/reject', ensureAuthenticated, switchesController.reject);
+switchesRoutes.get('/readPendingSentSwitches', ensureAuthenticated, switchesController.readPendingSentSwitches);
+switchesRoutes.get('/readPendingReceivedSwitches', ensureAuthenticated, switchesController.readPendingReceivedSwitches);
+switchesRoutes.get('/readActiveSentSwitches', ensureAuthenticated, switchesController.readActiveSentSwitches);
+switchesRoutes.get('/readActiveReceivedSwitches', ensureAuthenticated, switchesController.readActiveReceivedSwitches);
 
 export default switchesRoutes;

@@ -7,15 +7,15 @@ import AppError from '@shared/errors/AppError';
 import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 import IInvitesRepository from '@modules/invites/repositories/IInvitesRepository';
-import IUsersRepository from '../repositories/IUsersRepository';
 
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
+import IUsersRepository from '../repositories/IUsersRepository';
 
-const bucketName = process.env.BUCKET_NAME
-const bucketRegion = process.env.BUCKET_REGION
-const accessKey = process.env.ACCESS_KEY
-const secretAccessKey = process.env.SECRET_ACCESS_KEY
+const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
+const accessKey = process.env.ACCESS_KEY;
+const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 
 interface IRequest {
   name: string;
@@ -48,7 +48,7 @@ export default class CreateUserService {
   ) { }
 
   public async execute({
-    name, nickname, email, cpf, profession, specialization, phone, password, city, state, image
+    name, nickname, email, cpf, profession, specialization, phone, password, city, state, image,
   }: IRequest): Promise<Users> {
     const userAlreadyExists = await this.usersRepository.findByEmailPhoneOrCpf(email, phone, cpf);
 
@@ -73,13 +73,12 @@ export default class CreateUserService {
       region: bucketRegion,
       credentials: {
         accessKeyId: accessKey as string,
-        secretAccessKey: secretAccessKey as string
-      }
+        secretAccessKey: secretAccessKey as string,
+      },
     });
 
     if (image && s3) {
-      
-      const buffer = await sharp(image).resize({height: 300, width: 300, fit: 'contain'}).png().toBuffer();
+      const buffer = await sharp(image).resize({ height: 300, width: 300, fit: 'contain' }).png().toBuffer();
 
       const params = {
         Bucket: bucketName,
