@@ -67,8 +67,6 @@ export default class UsersController {
   public async sendPin(req: Request, res: Response): Promise<Response> {
     const { email } = req.body;
 
-    console.log('EMAIL', email);
-
     const sendPinToUserEmail = container.resolve(SendPinToUserEmailService);
 
     const user = await sendPinToUserEmail.execute({
