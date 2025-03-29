@@ -17,5 +17,7 @@ usersRoutes.get('/readByEmail', ensureAuthenticated, usersController.readByEmail
 usersRoutes.patch('/update', upload.single('image'), ensureAuthenticated, usersController.update);
 usersRoutes.delete('/delete', ensureAuthenticated, usersController.delete);
 usersRoutes.post('/send-pin', usersController.sendPin);
+usersRoutes.post('/verify-pin/:id', usersController.verifyPin);
+usersRoutes.post('/reset-password/:id', usersController.resetPassword);
 
 export default usersRoutes;
