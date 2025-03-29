@@ -8,6 +8,7 @@ import DeleteUserService from '@modules/users/services/DeleteUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 import { generateUserImageUrl } from '@shared/infra/http/middlewares/GenerateUserImageUrl';
 import ReadUserByEmailService from '@modules/users/services/ReadUserByEmailService';
+import SendPinToUserEmailService from '@modules/users/services/SendPinToUserEmailService';
 
 export default class UsersController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -59,6 +60,18 @@ export default class UsersController {
       password: undefined,
       image: undefined,
     })));
+  }
+
+  public async sendPin(req: Request, res: Response): Promise<Response> {
+    const { email } = req.body;
+
+    const sendPinToUserEmail = container.resolve(SendPinToUserEmailService);
+
+    const user = await sendPinToUserEmail.execute({
+      email,
+    });
+
+    return res.status(201).json({ id: user.id });
   }
 
   public async readById(req: Request, res: Response): Promise<Response> {

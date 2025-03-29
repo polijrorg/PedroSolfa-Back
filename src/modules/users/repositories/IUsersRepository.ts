@@ -12,6 +12,7 @@ interface IUsersRepository {
   delete(id: string): Promise<Users>;
   update(id: string, data: IUpdateUserDTO): Promise<Users>;
   registeredUsers(ids: string[]): Promise<boolean>;
+  // sendPinToUserEmail()
 }
 
 export default IUsersRepository;
