@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20, 21, 22]  # Use apenas versões compatíveis com sharp@0.33.5
+        node-version: [20.11.1, 21.0.0, 22.0.0]  # Versões compatíveis com sharp@0.33.5
 
     steps:
       - uses: actions/checkout@v3
@@ -19,16 +19,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: yarn  # Cache automático para Yarn
+          cache: yarn
 
       - name: Check Node.js version
-        run: node -v  # Confirma qual versão do Node.js está em uso
-
-      - name: Check Yarn version
-        run: yarn -v  # Confirma qual versão do Yarn está em uso
+        run: |
+          node -v  # Verificar versão do Node.js
+          npm -v   # Verificar versão do npm
+          yarn -v  # Verificar versão do Yarn
 
       - name: Install Dependencies
-        run: yarn install  # Instala pacotes usando Yarn
+        run: yarn install
 
       - name: Run ESLint
-        run: yarn lint  # Roda o ESLint para verificar o código
+        run: yarn lint
