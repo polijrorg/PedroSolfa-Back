@@ -20,6 +20,7 @@ interface IRequest {
   subscription_id: string;
   image: string | Buffer | undefined;
 }
+// teste
 
 @injectable()
 class CreateGroupService {
