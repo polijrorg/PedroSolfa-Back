@@ -4,8 +4,8 @@ import { Duties } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
-import IDutiesRepository from '../repositories/IDutiesRepository';
 import IInvitesRepository from '@modules/invites/repositories/IInvitesRepository';
+import IDutiesRepository from '../repositories/IDutiesRepository';
 
 interface IRequest {
   solicitor_id: string;

@@ -18,7 +18,7 @@ export default class GroupsRepository implements IGroupsRepository {
         name: data.name,
         super_adm_id: data.super_adm_id,
         subscription: {
-          connect: { id: data.subscription_id }
+          connect: { id: data.subscription_id },
         },
         description: data.description,
       },
@@ -61,13 +61,13 @@ export default class GroupsRepository implements IGroupsRepository {
                 user: {
                   select: {
                     id: true,
-                    name: true
-                  }
+                    name: true,
+                  },
                 },
-                role: true
-              }
-            }
-          }
+                role: true,
+              },
+            },
+          },
         },
       },
     });
@@ -116,13 +116,13 @@ export default class GroupsRepository implements IGroupsRepository {
                 user: {
                   select: {
                     id: true,
-                    name: true
-                  }
+                    name: true,
+                  },
                 },
-                role: true
-              }
-            }
-          }
+                role: true,
+              },
+            },
+          },
         },
       },
     });
@@ -138,6 +138,7 @@ export default class GroupsRepository implements IGroupsRepository {
           select: {
             id: true,
             email: true,
+            phone: true,
             name: true,
           },
         },
@@ -149,6 +150,7 @@ export default class GroupsRepository implements IGroupsRepository {
         users: {
           select: {
             id: true,
+            phone: true,
             email: true,
             name: true,
           },
@@ -156,6 +158,7 @@ export default class GroupsRepository implements IGroupsRepository {
         adms: {
           select: {
             id: true,
+            phone: true,
             email: true,
             name: true,
           },
@@ -172,13 +175,13 @@ export default class GroupsRepository implements IGroupsRepository {
                 user: {
                   select: {
                     id: true,
-                    name: true
-                  }
+                    name: true,
+                  },
                 },
-                role: true
-              }
-            }
-          }
+                role: true,
+              },
+            },
+          },
         },
       },
     });
@@ -228,13 +231,13 @@ export default class GroupsRepository implements IGroupsRepository {
                 user: {
                   select: {
                     id: true,
-                    name: true
-                  }
+                    name: true,
+                  },
                 },
-                role: true
-              }
-            }
-          }
+                role: true,
+              },
+            },
+          },
         },
       },
     });
@@ -281,15 +284,15 @@ export default class GroupsRepository implements IGroupsRepository {
             duration: true,
             usersOnDuty: {
               select: {
-                user:{
+                user: {
                   select: {
                     id: true,
                     name: true,
                   },
-                }
+                },
               },
             },
-          }
+          },
         },
       },
     });
@@ -323,14 +326,14 @@ export default class GroupsRepository implements IGroupsRepository {
         },
         subscription: {
           select: {
-            plan:{
+            plan: {
               select: {
-                max_users: true
-            }
+                max_users: true,
+              },
+            },
           },
         },
       },
-    },
     });
 
     if (!group) return false;
