@@ -96,6 +96,8 @@ export default class CreateUserService {
       }
     }
 
+    console.log('image', image);
+
     const updatedUser = this.usersRepository.update(
       user.id,
       {

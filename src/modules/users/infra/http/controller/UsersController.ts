@@ -29,6 +29,8 @@ export default class UsersController {
 
     const image = req.file ? req.file.buffer : undefined;
 
+    console.log(req.file);
+
     const createUser = container.resolve(CreateUserService);
 
     const user = await createUser.execute({

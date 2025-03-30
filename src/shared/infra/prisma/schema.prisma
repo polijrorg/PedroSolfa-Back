@@ -18,7 +18,7 @@ model Duties {
   date                 DateTime
   duration             Int
   group_id             String
-  group                Groups              @relation(fields: [group_id], references: [id])
+  group                Groups              @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   usersOnDuty          UsersOnDuty[]
 }
 
@@ -27,8 +27,8 @@ model UsersOnDuty {
   user_id String
   duty_id String
   role    String?
-  user    Users   @relation(fields: [user_id], references: [id])
-  duty    Duties  @relation(fields: [duty_id], references: [id])
+  user    Users   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  duty    Duties  @relation(fields: [duty_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Users {
@@ -75,6 +75,7 @@ model Groups {
   description    String
   created_at     DateTime        @default(now())
   updated_at     DateTime        @default(now())
+  image          String?
   duties         Duties[]
 }
 
@@ -88,9 +89,9 @@ model InvitedEmails {
 model Offers {
   id                    String              @id @default(uuid())
   offering_user_id      String
-  offering_user         Users               @relation("OfferingUser", fields: [offering_user_id], references: [id])
+  offering_user         Users               @relation("OfferingUser", fields: [offering_user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   offering_user_duty_id String
-  offering_user_duty    Duties              @relation("OfferingUserDuty", fields: [offering_user_duty_id], references: [id])
+  offering_user_duty    Duties              @relation("OfferingUserDuty", fields: [offering_user_duty_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   offer_propositions    OfferPropositions[] @relation("Offer")
   closed                Boolean
 }
@@ -98,11 +99,11 @@ model Offers {
 model OfferPropositions {
   id                       String  @id @default(uuid())
   offer_id                 String
-  offer                    Offers  @relation("Offer", fields: [offer_id], references: [id])
+  offer                    Offers  @relation("Offer", fields: [offer_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   proposition_user_id      String
-  proposition_user         Users   @relation("PropositionUser", fields: [proposition_user_id], references: [id])
+  proposition_user         Users   @relation("PropositionUser", fields: [proposition_user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   proposition_user_duty_id String
-  proposition_user_duty    Duties  @relation("PropositionUserDuty", fields: [proposition_user_duty_id], references: [id])
+  proposition_user_duty    Duties  @relation("PropositionUserDuty", fields: [proposition_user_duty_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   analized                 Boolean @default(false)
   accepted                 Boolean @default(false)
 }
@@ -132,13 +133,13 @@ model Subscriptions {
 model Switches {
   id                  String  @id @default(uuid())
   new_user_id         String
-  new_user            Users   @relation("NewUser", fields: [new_user_id], references: [id])
+  new_user            Users   @relation("NewUser", fields: [new_user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   new_user_duty_id    String
-  new_user_duty       Duties  @relation("NewUserDuty", fields: [new_user_duty_id], references: [id])
+  new_user_duty       Duties  @relation("NewUserDuty", fields: [new_user_duty_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   actual_user_id      String
-  actual_user         Users   @relation("ActualUser", fields: [actual_user_id], references: [id])
+  actual_user         Users   @relation("ActualUser", fields: [actual_user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   actual_user_duty_id String
-  actual_user_duty    Duties  @relation("ActualUserDuty", fields: [actual_user_duty_id], references: [id])
+  actual_user_duty    Duties  @relation("ActualUserDuty", fields: [actual_user_duty_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   analized            Boolean
   accepted            Boolean
 }

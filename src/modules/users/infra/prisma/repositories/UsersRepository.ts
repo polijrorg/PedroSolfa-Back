@@ -243,6 +243,7 @@ export default class UsersRepository implements IUsersRepository {
   }
 
   public async update(id: string, data: IUpdateUserDTO): Promise<Users> {
+    console.log('data', data);
     const user = await this.ormRepository.update({
       where: { id },
       data,
@@ -280,6 +281,7 @@ export default class UsersRepository implements IUsersRepository {
       },
     });
 
+    console.log('user', user);
     return user;
   }
 

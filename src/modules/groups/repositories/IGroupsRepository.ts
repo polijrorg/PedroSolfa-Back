@@ -10,6 +10,7 @@ interface IGroupsRepository {
   delete(id: string): Promise<Groups>;
   update(id: string, data: IUpdateGroupDTO): Promise<Groups>;
   groupIsFull(id: string): Promise<boolean>;
+  updateImage(id: string, image?: string | null): Promise<Groups>;
 }
 
 export default IGroupsRepository;

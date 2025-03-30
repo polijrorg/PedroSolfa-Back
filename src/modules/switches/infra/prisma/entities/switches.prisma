@@ -1,13 +1,13 @@
 model Switches {
-  id                  String            @id @default(uuid())
+  id                  String  @id @default(uuid())
   new_user_id         String
-  new_user            Users             @relation("NewUser", fields: [new_user_id], references: [id])
+  new_user            Users   @relation("NewUser", fields: [new_user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   new_user_duty_id    String
-  new_user_duty       Duties            @relation("NewUserDuty", fields: [new_user_duty_id], references: [id])
+  new_user_duty       Duties  @relation("NewUserDuty", fields: [new_user_duty_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   actual_user_id      String
-  actual_user         Users             @relation("ActualUser", fields: [actual_user_id], references: [id])
+  actual_user         Users   @relation("ActualUser", fields: [actual_user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   actual_user_duty_id String
-  actual_user_duty    Duties            @relation("ActualUserDuty", fields: [actual_user_duty_id], references: [id])
+  actual_user_duty    Duties  @relation("ActualUserDuty", fields: [actual_user_duty_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   analized            Boolean
   accepted            Boolean
 }
@@ -19,7 +19,7 @@ model Duties {
 }
 
 model Users {
-  id                String            @id @default(uuid())
-  received_switches Switches[]        @relation("NewUser")
-  sent_switches     Switches[]        @relation("ActualUser")
+  id                String     @id @default(uuid())
+  received_switches Switches[] @relation("NewUser")
+  sent_switches     Switches[] @relation("ActualUser")
 }

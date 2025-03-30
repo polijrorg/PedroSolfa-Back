@@ -1,5 +1,5 @@
 import prisma from '@shared/infra/prisma/client';
-import { Prisma, Groups } from '@prisma/client';
+import { Groups } from '@prisma/client';
 
 import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
 import ICreateGroupDTO from '@modules/groups/dtos/ICreateGroupDTO';
@@ -10,6 +10,66 @@ export default class GroupsRepository implements IGroupsRepository {
 
   constructor() {
     this.ormRepository = prisma.groups;
+  }
+
+  public async updateImage(id: string, image?: string | null): Promise<Groups> {
+    console.log(image);
+    const group = await this.ormRepository.update({
+      where: { id },
+      data: {
+        image,
+      },
+      include: {
+        invited_users: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          },
+        },
+        invited_emails: {
+          select: {
+            email: true,
+          },
+        },
+        users: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          },
+        },
+        adms: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          },
+        },
+        duties: {
+          select: {
+            id: true,
+            description: true,
+            date: true,
+            duration: true,
+            usersOnDuty: {
+              select: {
+                id: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+                role: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return group;
   }
 
   public async create(data: ICreateGroupDTO & { include: { invited_users: { select: { email: true; name: true; }; }; }; }): Promise<Groups> {
