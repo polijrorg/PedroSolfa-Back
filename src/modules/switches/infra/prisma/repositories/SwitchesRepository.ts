@@ -84,7 +84,7 @@ export default class SwitchesRepository implements ISwitchesRepository {
     return prisma.switches.findMany({
       where: {
         actual_user_id: user_id,
-        analized: true,
+        accepted: true,
       },
     });
   }
@@ -93,7 +93,7 @@ export default class SwitchesRepository implements ISwitchesRepository {
     return prisma.switches.findMany({
       where: {
         actual_user_id: user_id,
-        analized: false,
+        accepted: false,
       },
     });
   }
@@ -102,16 +102,17 @@ export default class SwitchesRepository implements ISwitchesRepository {
     return prisma.switches.findMany({
       where: {
         new_user_id: user_id,
-        analized: true,
+        accepted: true,
       },
     });
   }
 
   readMyReceivedSwitchesPending(user_id: string): Promise<Switches[]> {
+    console.log('user_id', user_id);
     return prisma.switches.findMany({
       where: {
         new_user_id: user_id,
-        analized: false,
+        accepted: false,
       },
     });
   }

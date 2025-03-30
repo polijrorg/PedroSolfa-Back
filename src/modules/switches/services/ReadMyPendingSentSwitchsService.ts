@@ -12,7 +12,7 @@ class ReadMyPendingSentSwitchsService {
   ) {}
 
   public async execute(user_id: string) {
-    const switchs = await this.switchsRepository.readMySentSwitchesAnalyzed(user_id);
+    const switchs = await this.switchsRepository.readMySentSwitchesPending(user_id);
 
     return switchs;
   }

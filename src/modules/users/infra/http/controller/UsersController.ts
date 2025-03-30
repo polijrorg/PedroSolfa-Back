@@ -8,9 +8,9 @@ import DeleteUserService from '@modules/users/services/DeleteUserService';
 import UpdateUserService from '@modules/users/services/UpdateUserService';
 import { generateUserImageUrl } from '@shared/infra/http/middlewares/GenerateUserImageUrl';
 import ReadUserByEmailService from '@modules/users/services/ReadUserByEmailService';
-import SendPinToUserEmailService from '@modules/users/services/SendPinToUserEmailService.tS';
 import ResetPasswordService from '@modules/users/services/ResetPasswordService';
 import VerifyPinService from '@modules/users/services/VerifyPinService';
+import SendPinToUserService from '@modules/users/services/SendPinToUserEmailService';
 
 export default class UsersController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -67,7 +67,7 @@ export default class UsersController {
   public async sendPin(req: Request, res: Response): Promise<Response> {
     const { email } = req.body;
 
-    const sendPinToUserEmail = container.resolve(SendPinToUserEmailService);
+    const sendPinToUserEmail = container.resolve(SendPinToUserService);
 
     const user = await sendPinToUserEmail.execute({
       email,
