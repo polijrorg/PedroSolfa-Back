@@ -21,11 +21,17 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: yarn
 
-      - name: Check Node.js version
+      - name: Ensure Correct Node.js Version
         run: |
-          node -v  # Verificar versão do Node.js
-          npm -v   # Verificar versão do npm
-          yarn -v  # Verificar versão do Yarn
+          echo "Using Node.js version:"
+          node -v
+          if [[ "$(node -v)" != v20* && "$(node -v)" != v21* && "$(node -v)" != v22* ]]; then
+            echo "Incorrect Node.js version detected. Installing correct version..."
+            nvm install ${{ matrix.node-version }}
+            nvm use ${{ matrix.node-version }}
+          fi
+          echo "Node.js version after correction:"
+          node -v
 
       - name: Install Dependencies
         run: yarn install
