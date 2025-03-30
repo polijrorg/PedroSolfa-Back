@@ -1,11 +1,10 @@
 import prisma from '@shared/infra/prisma/client';
 import { Prisma, Duties, Groups } from '@prisma/client';
 
-import IDutiesRepository from '@modules/duties/repositories/IDutiesRepository';
+import IDutiesRepository, { OmittedDutyWithUsers } from '@modules/duties/repositories/IDutiesRepository';
 import ICreateDutyDTO from '@modules/duties/dtos/ICreateDutyDTO';
 import IUpdateDutyDTO from '@modules/duties/dtos/IUpdateDutyDTO';
 import IUserOnDuty from '@modules/duties/dtos/IUserOnDutyDTO';
-import { OmittedDutyWithUsers } from '@modules/duties/repositories/IDutiesRepository';
 
 export default class DutiesRepository implements IDutiesRepository {
   private ormRepository;
@@ -21,25 +20,27 @@ export default class DutiesRepository implements IDutiesRepository {
         date: data.date,
         duration: data.duration,
         group_id: data.group_id,
-      }
+      },
     });
 
     const usersOnDuty = await prisma.usersOnDuty.createMany({
       data: data.users.map((user: { id: string; role?: string }) => ({
-      user_id: user.id,
-      duty_id: duty.id,
-      role: user.role?.toUpperCase()
+        user_id: user.id,
+        duty_id: duty.id,
+        role: user.role?.toUpperCase(),
       })),
-      skipDuplicates: true
+      skipDuplicates: true,
     });
+
+    console.log('usersOnDuty', usersOnDuty);
 
     const usersOnDutyArray = await prisma.usersOnDuty.findMany({
       where: {
-        duty_id: duty.id
+        duty_id: duty.id,
       },
       select: {
         id: true,
-      }
+      },
     });
 
     const usersOnDutyIds = await usersOnDutyArray.map((user: { id: string }) => user.id);
@@ -48,8 +49,8 @@ export default class DutiesRepository implements IDutiesRepository {
       where: { id: duty.id },
       data: {
         usersOnDuty: {
-          set: usersOnDutyIds ? usersOnDutyIds.map((id: string) => ({ id })) : []
-        }
+          set: usersOnDutyIds ? usersOnDutyIds.map((id: string) => ({ id })) : [],
+        },
       },
       include: {
         usersOnDuty: {
@@ -58,20 +59,20 @@ export default class DutiesRepository implements IDutiesRepository {
             user: {
               select: {
                 id: true,
-                name: true
-              }
+                name: true,
+              },
             },
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     });
   }
 
   findAll(group_id: string): Promise<Duties[]> {
     return this.ormRepository.findMany({
       where: {
-        group_id
+        group_id,
       },
       include: {
         usersOnDuty: {
@@ -80,19 +81,19 @@ export default class DutiesRepository implements IDutiesRepository {
             user: {
               select: {
                 id: true,
-                name: true
-              }
+                name: true,
+              },
             },
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     });
   }
 
   findById(id: string): Promise<Duties | null> {
-    return this.ormRepository.findFirst({ 
-      where: { id }, 
+    return this.ormRepository.findFirst({
+      where: { id },
       include: {
         usersOnDuty: {
           select: {
@@ -100,51 +101,51 @@ export default class DutiesRepository implements IDutiesRepository {
             user: {
               select: {
                 id: true,
-                name: true
-              }
+                name: true,
+              },
             },
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     });
   }
 
   async delete(id: string): Promise<Duties> {
     await prisma.usersOnDuty.deleteMany({
       where: {
-        duty_id: id
-      }
+        duty_id: id,
+      },
     });
 
-    return this.ormRepository.delete({ 
-      where: { id }
+    return this.ormRepository.delete({
+      where: { id },
     });
   }
 
   async update(id: string, data: IUpdateDutyDTO): Promise<Duties> {
     await prisma.usersOnDuty.deleteMany({
       where: {
-        duty_id: id
-      }
+        duty_id: id,
+      },
     });
 
     const usersOnDuty = await prisma.usersOnDuty.createMany({
       data: data.users.map((user: { id: string; role?: string }) => ({
-      user_id: user.id,
-      duty_id: id,
-      role: user.role?.toUpperCase()
+        user_id: user.id,
+        duty_id: id,
+        role: user.role?.toUpperCase(),
       })),
-      skipDuplicates: true
+      skipDuplicates: true,
     });
 
     const usersOnDutyArray = await prisma.usersOnDuty.findMany({
       where: {
-        duty_id: id
+        duty_id: id,
       },
       select: {
         id: true,
-      }
+      },
     });
 
     const usersOnDutyIds = await usersOnDutyArray.map((user: { id: string }) => user.id);
@@ -156,8 +157,8 @@ export default class DutiesRepository implements IDutiesRepository {
         date: data.date,
         duration: data.duration,
         usersOnDuty: {
-          set: usersOnDutyIds ? usersOnDutyIds.map((id: string) => ({ id })) : []
-        }
+          set: usersOnDutyIds ? usersOnDutyIds.map((id: string) => ({ id })) : [],
+        },
       },
       include: {
         usersOnDuty: {
@@ -166,13 +167,13 @@ export default class DutiesRepository implements IDutiesRepository {
             user: {
               select: {
                 id: true,
-                name: true
-              }
+                name: true,
+              },
             },
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     });
   }
 
@@ -182,10 +183,10 @@ export default class DutiesRepository implements IDutiesRepository {
         usersOnDuty: {
           some: {
             user: {
-              id: user_id
-            }
-          }
-        }
+              id: user_id,
+            },
+          },
+        },
       },
       include: {
         usersOnDuty: {
@@ -194,16 +195,16 @@ export default class DutiesRepository implements IDutiesRepository {
             user: {
               select: {
                 id: true,
-                name: true
-              }
+                name: true,
+              },
             },
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     });
   }
-  
+
   findUserDuty(user_id: string, duty_id: string): Promise<Duties | null> {
     return this.ormRepository.findFirst({
       where: {
@@ -211,10 +212,10 @@ export default class DutiesRepository implements IDutiesRepository {
         usersOnDuty: {
           some: {
             user: {
-              id: user_id
-            }
-          }
-        }
+              id: user_id,
+            },
+          },
+        },
       },
       include: {
         usersOnDuty: {
@@ -223,45 +224,46 @@ export default class DutiesRepository implements IDutiesRepository {
             user: {
               select: {
                 id: true,
-                name: true
-              }
+                name: true,
+              },
             },
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     });
   }
 
   async dutiesOnSameGroup(actual_user_duty_id: string, new_user_duty_id: string): Promise<Groups | null> {
     const actualUserGroup = await this.ormRepository.findFirst({
       where: {
-        id: actual_user_duty_id
+        id: actual_user_duty_id,
       },
       select: {
-        group_id: true
-      }
+        group_id: true,
+      },
     });
     const newUserGroup = await this.ormRepository.findFirst({
       where: {
-        id: new_user_duty_id
+        id: new_user_duty_id,
       },
       select: {
-        group_id: true
-      }
+        group_id: true,
+      },
     });
 
-    return (actualUserGroup && newUserGroup && actualUserGroup.group_id === newUserGroup.group_id)?
-      prisma.groups.findFirst({
+    return (actualUserGroup && newUserGroup && actualUserGroup.group_id === newUserGroup.group_id)
+      ? prisma.groups.findFirst({
         where: {
-          id: actualUserGroup.group_id
-        }}) 
+          id: actualUserGroup.group_id,
+        },
+      })
       : null;
   }
 
   public async findOmittedDuty(id: string): Promise<OmittedDutyWithUsers | null> {
-    const omittedDuty = await this.ormRepository.findFirst({ 
-      where: { id }, 
+    const omittedDuty = await this.ormRepository.findFirst({
+      where: { id },
       include: {
         usersOnDuty: {
           select: {
@@ -270,13 +272,13 @@ export default class DutiesRepository implements IDutiesRepository {
             user: {
               select: {
                 id: true,
-              }
+              },
             },
-          }
-        }
-      }
+          },
+        },
+      },
     });
-    
+
     if (!omittedDuty) return null;
 
     return { ...omittedDuty, users: omittedDuty.usersOnDuty };
@@ -287,10 +289,10 @@ export default class DutiesRepository implements IDutiesRepository {
     const newUserDuty = await this.findOmittedDuty(new_user_duty_id);
     if (!actualUserDuty || !newUserDuty) return [];
 
-    const actualUserDutyIndex = actualUserDuty.users.findIndex(userOnDuty => userOnDuty.user.id === actual_user_id);
+    const actualUserDutyIndex = actualUserDuty.users.findIndex((userOnDuty) => userOnDuty.user.id === actual_user_id);
     if (actualUserDutyIndex === -1) return [];
 
-    const newUserDutyIndex = newUserDuty.users.findIndex(userOnDuty => userOnDuty.user.id === new_user_id);
+    const newUserDutyIndex = newUserDuty.users.findIndex((userOnDuty) => userOnDuty.user.id === new_user_id);
     if (newUserDutyIndex === -1) return [];
 
     actualUserDuty.users[actualUserDutyIndex].user.id = new_user_id;
@@ -300,14 +302,14 @@ export default class DutiesRepository implements IDutiesRepository {
       description: actualUserDuty.description,
       date: actualUserDuty.date,
       duration: actualUserDuty.duration,
-      users: actualUserDuty.users.map(user => ({ id: user.user.id, role: user.role ?? undefined }))
+      users: actualUserDuty.users.map((user) => ({ id: user.user.id, role: user.role ?? undefined })),
     });
 
     const updatedNewUserDuty = await this.update(new_user_duty_id, {
       description: newUserDuty.description,
       date: newUserDuty.date,
       duration: newUserDuty.duration,
-      users: newUserDuty.users.map(user => ({ id: user.user.id, role: user.role ?? undefined }))
+      users: newUserDuty.users.map((user) => ({ id: user.user.id, role: user.role ?? undefined })),
     });
 
     return [updatedActualUserDuty, updatedNewUserDuty];
@@ -318,10 +320,10 @@ export default class DutiesRepository implements IDutiesRepository {
       where: {
         usersOnDuty: {
           some: {
-            id: user_on_duty_id
-          }
-        }
-      }, 
+            id: user_on_duty_id,
+          },
+        },
+      },
       include: {
         usersOnDuty: {
           select: {
@@ -330,22 +332,22 @@ export default class DutiesRepository implements IDutiesRepository {
             user: {
               select: {
                 id: true,
-              }
+              },
             },
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
-    if (duty){
+    if (duty) {
       // @ts-ignore
-      for (const userOnDuty of duty.usersOnDuty){
-        if (userOnDuty.id === user_on_duty_id){
+      for (const userOnDuty of duty.usersOnDuty) {
+        if (userOnDuty.id === user_on_duty_id) {
           // @ts-ignore
           return { // @ts-ignore
             user_id: userOnDuty.user.id, // @ts-ignore
             duty_id: duty.id,
-          }
+          };
         }
       }
     }

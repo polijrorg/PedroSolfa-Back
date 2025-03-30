@@ -24,6 +24,7 @@ export default class SwitchesController {
     const createSwitch = container.resolve(CreateSwitchService);
 
     const switchEl = await createSwitch.execute({
+      user_id: id,
       user_on_duty_id,
       user_on_another_duty_id,
     });
@@ -45,6 +46,8 @@ export default class SwitchesController {
 
   public async readPendingReceivedSwitches(req: Request, res: Response): Promise<Response> {
     const { id } = req.token;
+
+    console.log('id', id);
 
     const readUser = container.resolve(ReadMyPendingReceivedSwitchsService);
 
