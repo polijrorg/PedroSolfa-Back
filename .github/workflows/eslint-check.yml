@@ -13,13 +13,16 @@ jobs:
         node-version: [20, 21, 22]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
+
+      - name: Check Node.js version
+        run: node -v  # Verifica qual versão do Node.js está sendo usada no workflow
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
