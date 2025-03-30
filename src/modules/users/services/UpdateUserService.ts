@@ -5,14 +5,14 @@ import { Users } from '@prisma/client';
 import AppError from '@shared/errors/AppError';
 
 import IHashProvider from '@shared/container/providers/HashProvider/models/IHashProvider';
-import IUsersRepository from '../repositories/IUsersRepository';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
+import IUsersRepository from '../repositories/IUsersRepository';
 
-const bucketName = process.env.BUCKET_NAME
-const bucketRegion = process.env.BUCKET_REGION
-const accessKey = process.env.ACCESS_KEY
-const secretAccessKey = process.env.SECRET_ACCESS_KEY
+const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
+const accessKey = process.env.ACCESS_KEY;
+const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 
 interface IRequest {
     id: string;
@@ -39,7 +39,7 @@ export default class UpdateUserService {
   ) { }
 
   public async execute({
-    id, name, nickname, email, profession, specialization, phone, password, city, state, image
+    id, name, nickname, email, profession, specialization, phone, password, city, state, image,
   }: IRequest): Promise<Users> {
     const userAlreadyExists = await this.usersRepository.findById(id);
 
@@ -47,28 +47,27 @@ export default class UpdateUserService {
 
     if (email) {
       const userWithUpdatedEmail = await this.usersRepository.findByEmailWithRelations(email.toLowerCase());
-        if (userWithUpdatedEmail && userWithUpdatedEmail.id !== id) {
-          throw new AppError('Another user with same email already exists');
-        }
+      if (userWithUpdatedEmail && userWithUpdatedEmail.id !== id) {
+        throw new AppError('Another user with same email already exists');
+      }
     }
 
-    if(password){
+    if (password) {
       const hashedPassword = await this.hashProvider.generateHash(password);
       userAlreadyExists.password = hashedPassword;
     }
 
-    if(image){
+    if (image) {
       const s3 = new S3Client({
         region: bucketRegion,
         credentials: {
           accessKeyId: accessKey as string,
-          secretAccessKey: secretAccessKey as string
-        }
+          secretAccessKey: secretAccessKey as string,
+        },
       });
 
       if (s3) {
-      
-        const buffer = await sharp(image).resize({height: 300, width: 300, fit: 'contain'}).png().toBuffer();
+        const buffer = await sharp(image).resize({ height: 300, width: 300, fit: 'contain' }).png().toBuffer();
         image = userAlreadyExists.image;
         const params = {
           Bucket: bucketName,
@@ -76,7 +75,7 @@ export default class UpdateUserService {
           Body: buffer,
           ContentType: 'image/png',
         };
-  
+
         try {
           await s3.send(new PutObjectCommand(params));
           image = `${id}.png`;
@@ -89,15 +88,15 @@ export default class UpdateUserService {
     const updatedUser = this.usersRepository.update(
       id,
       {
-        name: name ? name : userAlreadyExists.name,
-        nickname: nickname ? nickname : userAlreadyExists.nickname,
+        name: name || userAlreadyExists.name,
+        nickname: nickname || userAlreadyExists.nickname,
         email: email ? email.toLowerCase() : userAlreadyExists.email,
-        profession: profession ? profession : userAlreadyExists.profession,
-        specialization: specialization ? specialization : userAlreadyExists.specialization,
-        phone: phone ? phone : userAlreadyExists.phone,
+        profession: profession || userAlreadyExists.profession,
+        specialization: specialization || userAlreadyExists.specialization,
+        phone: phone || userAlreadyExists.phone,
         password: userAlreadyExists.password,
-        city: city ? city : userAlreadyExists.city,
-        state: state ? state : userAlreadyExists.state,
+        city: city || userAlreadyExists.city,
+        state: state || userAlreadyExists.state,
         image: typeof image === 'string' ? image : userAlreadyExists.image,
       },
     );
