@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.11.1, 21.0.0, 22.0.0]  # Versões compatíveis com sharp@0.33.5
+        node-version: [23.x]  # Versões compatíveis com sharp@0.33.5
 
     steps:
       - uses: actions/checkout@v3
