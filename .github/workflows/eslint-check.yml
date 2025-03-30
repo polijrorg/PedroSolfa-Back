@@ -10,31 +10,30 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [23.x]  # Versões compatíveis com sharp@0.33.5
+        node-version: [23]
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: yarn
 
-      - name: Ensure Correct Node.js Version
-        run: |
-          echo "Using Node.js version:"
-          node -v
-          if [[ "$(node -v)" != v20* && "$(node -v)" != v21* && "$(node -v)" != v22* ]]; then
-            echo "Incorrect Node.js version detected. Installing correct version..."
-            nvm install ${{ matrix.node-version }}
-            nvm use ${{ matrix.node-version }}
-          fi
-          echo "Node.js version after correction:"
-          node -v
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
 
+      - name: Restoring yarn cache file
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Install Dependencies
-        run: yarn install
+        run: yarn
 
       - name: Run ESLint
         run: yarn lint
