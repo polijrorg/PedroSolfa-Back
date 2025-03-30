@@ -1,6 +1,6 @@
 interface IUpdateGroupDTO {
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
 }
 
 export default IUpdateGroupDTO;

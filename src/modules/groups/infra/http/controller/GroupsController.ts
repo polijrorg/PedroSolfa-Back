@@ -88,14 +88,18 @@ export default class GroupController {
       description,
     } = req.body;
 
+    const image = req.file ? req.file.buffer : undefined;
+
     const updateGroup = container.resolve(UpdateGroupService);
 
     const group = await updateGroup.execute({
       id,
       name,
+      description,
+      image,
     });
 
-    return res.status(201).json(group);
+    return res.status(201).json({ ...group, image: group ? await generateGroupImageUrl(group) : null });
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {

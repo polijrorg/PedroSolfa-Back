@@ -14,7 +14,7 @@ const groupsController = new GroupsController();
 groupsRoutes.post('/register', upload.single('image'), ensureAuthenticated, groupsController.create);
 groupsRoutes.get('/read', ensureAuthenticated, groupsController.readAll);
 groupsRoutes.get('/read/:id', ensureAuthenticated, groupsController.readById);
-groupsRoutes.patch('/update/:id', ensureAuthenticated, groupsController.update);
+groupsRoutes.patch('/update/:id', upload.single('image'), ensureAuthenticated, groupsController.update);
 groupsRoutes.delete('/delete/:id', ensureAuthenticated, groupsController.delete);
 
 export default groupsRoutes;
